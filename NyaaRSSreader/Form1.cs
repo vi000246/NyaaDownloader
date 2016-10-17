@@ -7,9 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data;
 using System.Xml;
-using System.XML.Linq;
+using System.Xml.Linq;
 
 namespace NyaaRSSreader
 {
@@ -40,19 +39,18 @@ namespace NyaaRSSreader
         {
 
             //新建XML文件類別
-            XmlDocument Xmldoc = new XmlDocument();
-            //從指定的字串載入XML文件
-            Xmldoc.Load(cbRssCate.SelectedValue.ToString());
-            //建立此物件，並輸入透過StringReader讀取Xmldoc中的Xmldoc字串輸出
-            XmlReader Xmlreader = XmlReader.Create(new System.IO.StringReader(Xmldoc.OuterXml));
-            //建立DataSet
-            DataSet ds = new DataSet();
-            //透過DataSet的ReadXml方法來讀取Xmlreader資料
-           // ds.ReadXml(Xmlreader);
-            //建立DataTable並將DataSet中的第0個Table資料給DataTable
-           // DataTable dt = ds.Tables[0];
-            //回傳DataTable
-           // return dt;
+             XDocument myXDoc = XDocument.Load(cbRssCate.SelectedValue.ToString());
+             var rootNode = myXDoc.Root.Element("channel").Descendants("item");
+            foreach (var item in rootNode)
+            {
+                string title = item.Element("title").Value;  // 標題
+                string link = item.Element("link").Value;    // 下載連結
+                string guid = item.Element("guid").Value;    // 文章連結
+                string description = item.Element("description").Value;    // 作種者 下載者個數
+                string pubDate = item.Element("pubDate").Value;    // 發佈日期
+            }
+
+
 
         }
 
