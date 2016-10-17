@@ -43,7 +43,7 @@ namespace NyaaRSSreader
         cbRssCate.ValueMember = "Key";
         }
 
-
+        #region 將Xml字串轉成DataGridView
         /// <summary>
         /// 將Xml字串轉成Datatable
         /// </summary>
@@ -90,16 +90,9 @@ namespace NyaaRSSreader
 
 
         }
+        #endregion
 
-        /// <summary>
-        /// 按下載入Rss按鈕
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnLoadRSS_Click(object sender, EventArgs e)
-        {
-            XmlStringToDataTable();
-        }
+
 
         /// <summary>
         /// Row Cell Button Click Event
@@ -153,6 +146,16 @@ namespace NyaaRSSreader
 
             }
         }
+        #region 按下搜尋按鈕和檔案下載路徑鈕
+        /// <summary>
+        /// 按下搜尋按鈕
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnLoadRSS_Click(object sender, EventArgs e)
+        {
+            XmlStringToDataTable();
+        }
 
         //選擇檔案下載路徑按鈕
         private void btnBrowse_Click(object sender, EventArgs e)
@@ -171,20 +174,22 @@ namespace NyaaRSSreader
                 Properties.Settings.Default.Save();
             }
         }
+        #endregion
 
+        #region 檔案大小的排序事件
         //dataGridView排序事件
         private void dataGridView1_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
         {
-            if (e.Column.Name == "Size")
-            {
+            //if (e.Column.Name == "Size")
+            //{
                  e.Handled = true;
                  e.SortResult = Compare(e.CellValue1.ToString(), e.CellValue2.ToString());
-            }
+            //}
         }
         private int Compare(string o1, string o2)
         {
             //用conpareTo方法比較大小
-            return GBConvertToMB(o1).ToString().CompareTo(GBConvertToMB(o2).ToString());
+            return GBConvertToMB(o1).CompareTo(GBConvertToMB(o2));
         }
         /// <summary>
         /// 輸入像是"1.67 Gib"或是"2.47 Mib"的字串 轉成MB回傳
@@ -194,6 +199,7 @@ namespace NyaaRSSreader
         private decimal GBConvertToMB(string obj) 
         {
             decimal result = 0;
+            //去除數字以外的字串
             string input = Regex.Replace(obj, @"[^\d\.]+", string.Empty);
             decimal decimalInput = 0;
             if (decimal.TryParse(input, out decimalInput))
@@ -206,6 +212,7 @@ namespace NyaaRSSreader
             }
             return result;
         }
+        #endregion
 
     }
 
