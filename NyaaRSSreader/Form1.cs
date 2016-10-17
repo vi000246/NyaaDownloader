@@ -51,38 +51,42 @@ namespace NyaaRSSreader
         /// <returns></returns>
         public void XmlStringToDataTable()
         {
-
-            //新建XML文件類別
-             XDocument myXDoc = XDocument.Load(cbRssCate.SelectedValue.ToString());
-             var rootNode = myXDoc.Root.Element("channel").Descendants("item");
-            //取得每個文章的資料
-            foreach (var item in rootNode)
+            try
             {
-                string title = item.Element("title").Value;  // 標題
-                string link = item.Element("link").Value;    // 下載連結
-                string guid = item.Element("guid").Value;    // 文章連結
-                DateTime myDate;
-                string pubDate=string.Empty;
-                if (DateTime.TryParse(item.Element("pubDate").Value, out myDate))
+                //新建XML文件類別
+                XDocument myXDoc = XDocument.Load(cbRssCate.SelectedValue.ToString());
+                var rootNode = myXDoc.Root.Element("channel").Descendants("item");
+                //取得每個文章的資料
+                foreach (var item in rootNode)
                 {
-                     pubDate = myDate.ToString("yyyy/MM/dd");
+                    string title = item.Element("title").Value;  // 標題
+                    string link = item.Element("link").Value;    // 下載連結
+                    string guid = item.Element("guid").Value;    // 文章連結
+                    DateTime myDate;
+                    string pubDate = string.Empty;
+                    if (DateTime.TryParse(item.Element("pubDate").Value, out myDate))
+                    {
+                        pubDate = myDate.ToString("yyyy/MM/dd");
+                    }
+
+                    string description = item.Element("description").Value;
+                    //過濾出需要的資訊
+                    Regex pattern1 = new Regex(
+    @"(?<seeder>\d+)\s+seeder\(s\),\s+(?<leecher>\d+)\s+leecher\(s\),\s+(?<download>\d+)\s+download\(s\)\s-\s+(?<size>[\d.]+\s+\w+)");
+                    Match match = pattern1.Match(description);
+
+                    string Download = match.Groups["download"].Value;
+                    string Size = match.Groups["size"].Value;
+                    string Leecher = match.Groups["leecher"].Value;
+                    string Seeder = match.Groups["seeder"].Value;
+                    //將資料綁定到dataGridView
+                    this.dataGridView1.Rows.Add(title, Size, Seeder, Leecher, Download, guid, link, pubDate);
                 }
 
-                string description = item.Element("description").Value;
-                //過濾出需要的資訊
-                Regex pattern1 = new Regex(
-@"(?<seeder>\d+)\s+seeder\(s\),\s+(?<leecher>\d+)\s+leecher\(s\),\s+(?<download>\d+)\s+download\(s\)\s-\s+(?<size>[\d.\w\W]+)"
-                , RegexOptions.Singleline);
-                Match match = pattern1.Match(description);
-
-                string Download = match.Groups["download"].Value;
-                string Size = match.Groups["size"].Value;
-                string Leecher = match.Groups["leecher"].Value;
-                string Seeder = match.Groups["seeder"].Value;
-                //將資料綁定到dataGridView
-                this.dataGridView1.Rows.Add(title, Size, Seeder, Leecher, Download, guid, link, pubDate);
             }
-
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
 
 
         }
@@ -136,7 +140,7 @@ namespace NyaaRSSreader
                         {
                             fileName = wc.ResponseHeaders["Content-Disposition"].Substring(wc.ResponseHeaders["Content-Disposition"].IndexOf("filename=") + 10).Replace("\"", "");
                         }
-
+                        //下載檔案
                         using (WebClient webClient = new WebClient())
                         {
                             webClient.DownloadFile(row.Cells["DownloadLink"].Value.ToString(), textPath.Text +"\\"+ fileName);
@@ -166,6 +170,41 @@ namespace NyaaRSSreader
                 Properties.Settings.Default.Path = fbd.SelectedPath;
                 Properties.Settings.Default.Save();
             }
+        }
+
+        //dataGridView排序事件
+        private void dataGridView1_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        {
+            if (e.Column.Name == "Size")
+            {
+                 e.Handled = true;
+                 e.SortResult = Compare(e.CellValue1.ToString(), e.CellValue2.ToString());
+            }
+        }
+        private int Compare(string o1, string o2)
+        {
+            //用conpareTo方法比較大小
+            return GBConvertToMB(o1).ToString().CompareTo(GBConvertToMB(o2).ToString());
+        }
+        /// <summary>
+        /// 輸入像是"1.67 Gib"或是"2.47 Mib"的字串 轉成MB回傳
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private decimal GBConvertToMB(string obj) 
+        {
+            decimal result = 0;
+            string input = Regex.Replace(obj, @"[^\d\.]+", string.Empty);
+            decimal decimalInput = 0;
+            if (decimal.TryParse(input, out decimalInput))
+            {
+                result = decimalInput;
+            }
+            if (obj.ToString().IndexOf("GiB") > -1)
+            {
+                result *= 1000;
+            }
+            return result;
         }
 
     }
