@@ -18,6 +18,9 @@ namespace NyaaRSSreader
 {
     public partial class Form1 : Form
     {
+        //頁數 從第一頁開始
+        public int OffsetIndex = 1;
+
         public Form1()
         {
             InitializeComponent();
@@ -33,6 +36,13 @@ namespace NyaaRSSreader
 
             //產生第一頁的資料
             XmlStringToDataTable(cbRssCate.SelectedValue.ToString());
+
+            //顯示目前頁數
+            textPage.Text = OffsetIndex.ToString();
+            //頁數textBox的文字置中
+            textPage.TextAlign = HorizontalAlignment.Center;
+            //頁數textbox的按下Enter事件
+            this.textPage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(CheckEnterKeyPress);
         }
         /// <summary>
         /// 下拉選單的值
@@ -89,6 +99,9 @@ namespace NyaaRSSreader
                     string Seeder = match.Groups["seeder"].Value;
                     //將資料綁定到dataGridView
                     this.dataGridView1.Rows.Add(title, Size, Seeder, Leecher, Download, guid, link, pubDate);
+                    //顯示目前頁數
+                    textPage.Text = OffsetIndex.ToString();
+                    ButtonEnable();
                 }
 
             }
@@ -154,7 +167,7 @@ namespace NyaaRSSreader
 
             }
         }
-        #region 按下檔案下載路徑鈕和改變下拉選單時
+        #region 檔案下載路徑鈕、改變下拉選單、上一頁、下一頁、改變頁數
 
         //當下拉選單發生選取事件時
         private void cbRssCate_SelectionChangeCommitted(object sender, EventArgs e)
@@ -164,12 +177,15 @@ namespace NyaaRSSreader
             {
                 //清空dataGridView的資料
                 this.dataGridView1.Rows.Clear();
+                //重設頁數為1
+                OffsetIndex = 1;
                 //載入資料
                 XmlStringToDataTable(url);
 
                 //將下拉選單的值存到全域變數
                 Properties.Settings.Default.ComboIndex = cbRssCate.SelectedIndex;
                 Properties.Settings.Default.Save();
+
             }
         }
         //選擇檔案下載路徑按鈕
@@ -189,8 +205,84 @@ namespace NyaaRSSreader
                 Properties.Settings.Default.Save();
             }
         }
+
+        //按下上一頁事件
+        private void btnPrev_Click(object sender, EventArgs e)
+        {
+            PageButtonClickEvent("Prev");
+        }
+
+        //按下下一頁事件
+        private void btnNext_Click(object sender, EventArgs e)
+        {
+            PageButtonClickEvent("Next");
+        }
+
+        public void PageButtonClickEvent(string type,int jumpPage=0) 
+        {
+            string offset=string.Empty;
+            string url = cbRssCate.SelectedValue.ToString();
+            //判斷要增加頁數還是減頁數還是跳頁
+            if(type=="Prev")
+                 offset = "&offset=" + --OffsetIndex;
+            else if (type == "Next")
+                offset = "&offset=" + ++OffsetIndex;
+            else if (type == "Jump")
+            {
+                offset = "&offset=" + jumpPage;
+                OffsetIndex = jumpPage;
+            }
+            ButtonEnable();
+            url += offset;
+
+            if (!string.IsNullOrEmpty(url))
+            {
+                //清空dataGridView的資料
+                this.dataGridView1.Rows.Clear();
+                //載入資料
+                XmlStringToDataTable(url);
+
+                //顯示目前頁數
+                textPage.Text = OffsetIndex.ToString();
+            }
+        }
+
+        //改變頁數text事件 按下Enter才會觸發
+        private void CheckEnterKeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
+            {
+                int page;
+                if (int.TryParse(textPage.Text, out page) && page > 0 && page < 101)
+                {
+                        PageButtonClickEvent("Jump", page);
+                }
+                else
+                {
+                    MessageBox.Show("請輸入1~100間的數字");
+                }
+            }
+        }
         #endregion
 
+        //判斷上一頁、下一頁按鈕可否使用
+        public void ButtonEnable() {
+            if (OffsetIndex == 1)
+            {
+                btnPrev.Enabled = false;
+                btnNext.Enabled = true;
+            }
+            else if (OffsetIndex == 100)
+            {
+                btnPrev.Enabled = true;
+                btnNext.Enabled = false;
+            }
+            else
+            {
+                btnPrev.Enabled = true;
+                btnNext.Enabled = true;
+            }
+        }
         #region 檔案大小的排序事件
         //dataGridView排序事件
         private void dataGridView1_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
@@ -228,6 +320,11 @@ namespace NyaaRSSreader
             return result;
         }
         #endregion
+
+
+
+
+
 
 
 

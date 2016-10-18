@@ -48,8 +48,13 @@
             this.btnView = new System.Windows.Forms.DataGridViewButtonColumn();
             this.btnDownload = new System.Windows.Forms.DataGridViewButtonColumn();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnPrev = new System.Windows.Forms.Button();
+            this.btnNext = new System.Windows.Forms.Button();
+            this.textPage = new System.Windows.Forms.TextBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // cbRssCate
@@ -120,7 +125,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(12, 103);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(839, 221);
+            this.dataGridView1.Size = new System.Drawing.Size(839, 205);
             this.dataGridView1.TabIndex = 5;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dataGridView1_SortCompare);
@@ -212,11 +217,54 @@
             this.panel1.Size = new System.Drawing.Size(586, 100);
             this.panel1.TabIndex = 6;
             // 
+            // btnPrev
+            // 
+            this.btnPrev.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnPrev.Enabled = false;
+            this.btnPrev.Location = new System.Drawing.Point(9, 5);
+            this.btnPrev.Name = "btnPrev";
+            this.btnPrev.Size = new System.Drawing.Size(69, 23);
+            this.btnPrev.TabIndex = 7;
+            this.btnPrev.Text = "上一頁";
+            this.btnPrev.UseVisualStyleBackColor = true;
+            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
+            // 
+            // btnNext
+            // 
+            this.btnNext.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnNext.Location = new System.Drawing.Point(128, 5);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(79, 23);
+            this.btnNext.TabIndex = 7;
+            this.btnNext.Text = "下一頁";
+            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            // 
+            // textPage
+            // 
+            this.textPage.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.textPage.Location = new System.Drawing.Point(85, 5);
+            this.textPage.Name = "textPage";
+            this.textPage.Size = new System.Drawing.Size(39, 22);
+            this.textPage.TabIndex = 8;
+            // 
+            // panel2
+            // 
+            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.panel2.Controls.Add(this.btnPrev);
+            this.panel2.Controls.Add(this.btnNext);
+            this.panel2.Controls.Add(this.textPage);
+            this.panel2.Location = new System.Drawing.Point(312, 311);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(214, 32);
+            this.panel2.TabIndex = 9;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(863, 336);
+            this.ClientSize = new System.Drawing.Size(863, 342);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.dataGridView1);
             this.Name = "Form1";
@@ -224,6 +272,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -247,6 +297,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewButtonColumn btnView;
         private System.Windows.Forms.DataGridViewButtonColumn btnDownload;
+        private System.Windows.Forms.Button btnPrev;
+        private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.TextBox textPage;
+        private System.Windows.Forms.Panel panel2;
     }
 }
 
