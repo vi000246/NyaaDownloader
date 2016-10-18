@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -134,13 +135,13 @@ namespace NyaaRSSreader
                         if (row.Cells["articleLink"].Value != null)
                         {
                             //只有RealLife類別才能用預覽圖
-                            if (!cbRssCate.Text.Contains("RealLife"))
-                                MessageBox.Show("此類別尚不支援預覽圖功能");
-                            else
+                            //if (!cbRssCate.Text.Contains("RealLife"))
+                            //    MessageBox.Show("此類別尚不支援預覽圖功能");
+                            //else
                                 //彈出預覽圖視窗
-                            {
+                           // {
                                 ImagePopup(row.Cells["articleLink"].Value.ToString());
-                            }
+                            //}
                         }
                         else
                         {
@@ -228,7 +229,14 @@ namespace NyaaRSSreader
                 }
             }
             else {
-                MessageBox.Show("查無預覽圖!!");
+                if ((MessageBox.Show("查無預覽圖，是否直接開啟頁面?", "訊息",
+    MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+    MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes))
+                {
+                    //用瀏覽器開啟網址
+                    ProcessStartInfo sInfo = new ProcessStartInfo(url);
+                    Process.Start(sInfo);
+                }
             }
         }
         #endregion

@@ -22,6 +22,10 @@ namespace NyaaRSSreader
             IRestResponse response = client.Execute(request);
             string html = response.Content;
 
+            //分離出html裡的image Url
+
+            //判斷能否取到大圖 
+
             return imageList;
         }
     }
