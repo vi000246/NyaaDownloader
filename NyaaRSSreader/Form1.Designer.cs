@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -37,6 +38,11 @@
             this.textPath = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.btnPrev = new System.Windows.Forms.Button();
+            this.btnNext = new System.Windows.Forms.Button();
+            this.textPage = new System.Windows.Forms.TextBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Size = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Seeder = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -47,11 +53,6 @@
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnView = new System.Windows.Forms.DataGridViewButtonColumn();
             this.btnDownload = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.btnPrev = new System.Windows.Forms.Button();
-            this.btnNext = new System.Windows.Forms.Button();
-            this.textPage = new System.Windows.Forms.TextBox();
-            this.panel2 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -122,13 +123,77 @@
             this.Date,
             this.btnView,
             this.btnDownload});
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.LavenderBlush;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.SteelBlue;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dataGridView1.GridColor = System.Drawing.SystemColors.ActiveCaption;
             this.dataGridView1.Location = new System.Drawing.Point(12, 103);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 24;
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(839, 205);
             this.dataGridView1.TabIndex = 5;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dataGridView1_SortCompare);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.btnBrowse);
+            this.panel1.Controls.Add(this.lbTorrPath);
+            this.panel1.Controls.Add(this.textPath);
+            this.panel1.Controls.Add(this.cbRssCate);
+            this.panel1.Controls.Add(this.lbRssCate);
+            this.panel1.Location = new System.Drawing.Point(14, -3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(586, 100);
+            this.panel1.TabIndex = 6;
+            // 
+            // btnPrev
+            // 
+            this.btnPrev.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnPrev.Enabled = false;
+            this.btnPrev.Location = new System.Drawing.Point(9, 5);
+            this.btnPrev.Name = "btnPrev";
+            this.btnPrev.Size = new System.Drawing.Size(69, 23);
+            this.btnPrev.TabIndex = 7;
+            this.btnPrev.Text = "上一頁";
+            this.btnPrev.UseVisualStyleBackColor = true;
+            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
+            // 
+            // btnNext
+            // 
+            this.btnNext.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnNext.Location = new System.Drawing.Point(128, 5);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(79, 23);
+            this.btnNext.TabIndex = 7;
+            this.btnNext.Text = "下一頁";
+            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            // 
+            // textPage
+            // 
+            this.textPage.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.textPage.Location = new System.Drawing.Point(85, 5);
+            this.textPage.Name = "textPage";
+            this.textPage.Size = new System.Drawing.Size(39, 22);
+            this.textPage.TabIndex = 8;
+            // 
+            // panel2
+            // 
+            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.panel2.Controls.Add(this.btnPrev);
+            this.panel2.Controls.Add(this.btnNext);
+            this.panel2.Controls.Add(this.textPage);
+            this.panel2.Location = new System.Drawing.Point(312, 311);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(214, 32);
+            this.panel2.TabIndex = 9;
             // 
             // Title
             // 
@@ -186,78 +251,39 @@
             // 
             // btnView
             // 
+            this.btnView.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Tomato;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.NullValue = "預覽圖";
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Brown;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
             this.btnView.DefaultCellStyle = dataGridViewCellStyle2;
+            this.btnView.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnView.HeaderText = "文章連結";
             this.btnView.Name = "btnView";
             this.btnView.Text = "預覽圖";
             this.btnView.UseColumnTextForButtonValue = true;
+            this.btnView.Width = 59;
             // 
             // btnDownload
             // 
+            this.btnDownload.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Transparent;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.Tomato;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle3.NullValue = "下載";
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.Brown;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White;
             this.btnDownload.DefaultCellStyle = dataGridViewCellStyle3;
+            this.btnDownload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDownload.HeaderText = "下載Torrent";
             this.btnDownload.Name = "btnDownload";
             this.btnDownload.Text = "下載";
             this.btnDownload.UseColumnTextForButtonValue = true;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.btnBrowse);
-            this.panel1.Controls.Add(this.lbTorrPath);
-            this.panel1.Controls.Add(this.textPath);
-            this.panel1.Controls.Add(this.cbRssCate);
-            this.panel1.Controls.Add(this.lbRssCate);
-            this.panel1.Location = new System.Drawing.Point(14, -3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(586, 100);
-            this.panel1.TabIndex = 6;
-            // 
-            // btnPrev
-            // 
-            this.btnPrev.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnPrev.Enabled = false;
-            this.btnPrev.Location = new System.Drawing.Point(9, 5);
-            this.btnPrev.Name = "btnPrev";
-            this.btnPrev.Size = new System.Drawing.Size(69, 23);
-            this.btnPrev.TabIndex = 7;
-            this.btnPrev.Text = "上一頁";
-            this.btnPrev.UseVisualStyleBackColor = true;
-            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
-            // 
-            // btnNext
-            // 
-            this.btnNext.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnNext.Location = new System.Drawing.Point(128, 5);
-            this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(79, 23);
-            this.btnNext.TabIndex = 7;
-            this.btnNext.Text = "下一頁";
-            this.btnNext.UseVisualStyleBackColor = true;
-            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
-            // 
-            // textPage
-            // 
-            this.textPage.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.textPage.Location = new System.Drawing.Point(85, 5);
-            this.textPage.Name = "textPage";
-            this.textPage.Size = new System.Drawing.Size(39, 22);
-            this.textPage.TabIndex = 8;
-            // 
-            // panel2
-            // 
-            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.panel2.Controls.Add(this.btnPrev);
-            this.panel2.Controls.Add(this.btnNext);
-            this.panel2.Controls.Add(this.textPage);
-            this.panel2.Location = new System.Drawing.Point(312, 311);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(214, 32);
-            this.panel2.TabIndex = 9;
+            this.btnDownload.Width = 70;
             // 
             // Form1
             // 
@@ -287,6 +313,10 @@
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button btnPrev;
+        private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.TextBox textPage;
+        private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Title;
         private System.Windows.Forms.DataGridViewTextBoxColumn Size;
         private System.Windows.Forms.DataGridViewTextBoxColumn Seeder;
@@ -297,10 +327,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewButtonColumn btnView;
         private System.Windows.Forms.DataGridViewButtonColumn btnDownload;
-        private System.Windows.Forms.Button btnPrev;
-        private System.Windows.Forms.Button btnNext;
-        private System.Windows.Forms.TextBox textPage;
-        private System.Windows.Forms.Panel panel2;
     }
 }
 
