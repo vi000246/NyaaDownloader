@@ -31,16 +31,24 @@ namespace NyaaRSSreader
             else
                 textPath.Text = Properties.Settings.Default.Path;
 
+            //產生第一頁的資料
+            XmlStringToDataTable(cbRssCate.SelectedValue.ToString());
         }
         /// <summary>
         /// 下拉選單的值
         /// </summary>
         public void BindComboboxData(){
             Dictionary<string, string>test = new Dictionary<string, string>();
+            test.Add("https://www.nyaa.se/?page=rss&cats=1_0", "Anime");
+            test.Add("https://www.nyaa.se/?page=rss&cats=3_0", "Audio");
             test.Add("https://sukebei.nyaa.se/?page=rss&cats=8_0", "R18-RealLife");
+
+        
         cbRssCate.DataSource = new BindingSource(test, null);
         cbRssCate.DisplayMember = "Value";
         cbRssCate.ValueMember = "Key";
+
+        cbRssCate.SelectedIndex = Properties.Settings.Default.ComboIndex;
         }
 
         #region 將Xml字串轉成DataGridView
@@ -49,12 +57,12 @@ namespace NyaaRSSreader
         /// </summary>
         /// <param name="Xmlstring"></param>
         /// <returns></returns>
-        public void XmlStringToDataTable()
+        public void XmlStringToDataTable(string url)
         {
             try
             {
                 //新建XML文件類別
-                XDocument myXDoc = XDocument.Load(cbRssCate.SelectedValue.ToString());
+                XDocument myXDoc = XDocument.Load(url);
                 var rootNode = myXDoc.Root.Element("channel").Descendants("item");
                 //取得每個文章的資料
                 foreach (var item in rootNode)
@@ -146,17 +154,24 @@ namespace NyaaRSSreader
 
             }
         }
-        #region 按下搜尋按鈕和檔案下載路徑鈕
-        /// <summary>
-        /// 按下搜尋按鈕
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnLoadRSS_Click(object sender, EventArgs e)
-        {
-            XmlStringToDataTable();
-        }
+        #region 按下檔案下載路徑鈕和改變下拉選單時
 
+        //當下拉選單發生選取事件時
+        private void cbRssCate_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            string url = cbRssCate.SelectedValue.ToString();
+            if (!string.IsNullOrEmpty(url))
+            {
+                //清空dataGridView的資料
+                this.dataGridView1.Rows.Clear();
+                //載入資料
+                XmlStringToDataTable(url);
+
+                //將下拉選單的值存到全域變數
+                Properties.Settings.Default.ComboIndex = cbRssCate.SelectedIndex;
+                Properties.Settings.Default.Save();
+            }
+        }
         //選擇檔案下載路徑按鈕
         private void btnBrowse_Click(object sender, EventArgs e)
         {
@@ -213,6 +228,10 @@ namespace NyaaRSSreader
             return result;
         }
         #endregion
+
+
+
+
 
     }
 
