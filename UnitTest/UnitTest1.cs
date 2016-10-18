@@ -14,6 +14,7 @@ namespace UnitTest
         {
             //輸入小圖的網址 
             var urlList = new GetPreViewImage().GetBigImageUrl("http://1dl.biz/i.php?b/161016080626");
+            Assert.IsTrue(urlList.Count>0);
             foreach (var url in urlList)
             {
                 Assert.IsTrue(Regex.IsMatch(url, @"(?<url>https?://1dl.biz(?:[\d\w-_./\?]*)[\d\w-_.]*.jpe?g)", RegexOptions.Singleline));
