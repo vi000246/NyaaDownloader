@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,11 @@ namespace NyaaRSSreader
         public List<string> CallImageHanderdle(string url) 
         {
             List<string> imageList = new List<string>();
+            //取得頁面的html
+            var client = new RestClient(url);
+            var request = new RestRequest("", Method.GET);
+            IRestResponse response = client.Execute(request);
+            string html = response.Content;
 
             return imageList;
         }
