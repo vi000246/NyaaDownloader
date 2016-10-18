@@ -4,3 +4,4 @@ c:\users\administrator\documents\visual studio 2013\Projects\NyaaRSSreader\NyaaR
 c:\users\administrator\documents\visual studio 2013\Projects\NyaaRSSreader\NyaaRSSreader\obj\Debug\NyaaRSSreader.exe
 c:\users\administrator\documents\visual studio 2013\Projects\NyaaRSSreader\NyaaRSSreader\obj\Debug\NyaaRSSreader.pdb
 C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\NyaaRSSreader\obj\Debug\NyaaRSSreader.Nyaa抓檔神器.resources
+C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\NyaaRSSreader\obj\Debug\NyaaRSSreader.csprojResolveAssemblyReference.cache

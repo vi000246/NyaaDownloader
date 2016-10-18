@@ -226,7 +226,7 @@ namespace NyaaRSSreader
                         //改變form的大小
                         form.Size = new Size(MaxWidth, TotalHeight);
                         //設成半透明 記得拿掉
-                        //form.Opacity = 0.1;
+                        form.Opacity = 0.1;
                         form.ShowDialog();
                     }
                 }

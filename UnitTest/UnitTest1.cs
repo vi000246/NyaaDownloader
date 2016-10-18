@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NyaaRSSreader;
+using System.Text.RegularExpressions;
 
 namespace UnitTest
 {
@@ -7,8 +9,17 @@ namespace UnitTest
     public class UnitTest1
     {
         [TestMethod]
-        public void TestMethod1()
+        //判斷能不能回傳1dl.biz的大圖
+        public void TestBizLink()
         {
+            //輸入小圖的網址 
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://1dl.biz/i.php?b/161016080626");
+            foreach (var url in urlList)
+            {
+                Assert.IsTrue(Regex.IsMatch(url, @"(?<url>https?://1dl.biz(?:[\d\w-_./\?]*)[\d\w-_.]*.jpe?g)", RegexOptions.Singleline));
+            }
         }
+
+
     }
 }
