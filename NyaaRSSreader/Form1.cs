@@ -24,10 +24,8 @@ namespace NyaaRSSreader
         public Form1()
         {
             InitializeComponent();
-
             //綁定下拉選單的物件
             BindComboboxData();
-
             //檔案預設下載路徑是桌面或是全域變數裡的值
             if (string.IsNullOrEmpty(Properties.Settings.Default.Path))
                 textPath.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
@@ -36,7 +34,6 @@ namespace NyaaRSSreader
 
             //產生第一頁的資料
             XmlStringToDataTable(cbRssCate.SelectedValue.ToString());
-
             //顯示目前頁數
             textPage.Text = OffsetIndex.ToString();
             //頁數textBox的文字置中
@@ -57,11 +54,11 @@ namespace NyaaRSSreader
         cbRssCate.DataSource = new BindingSource(test, null);
         cbRssCate.DisplayMember = "Value";
         cbRssCate.ValueMember = "Key";
-
+        //選擇預設的選項 
         cbRssCate.SelectedIndex = Properties.Settings.Default.ComboIndex;
         }
 
-        #region 將Xml字串轉成DataGridView
+        #region 將RSS取得的Xml字串轉成DataGridView
         /// <summary>
         /// 將Xml字串轉成Datatable
         /// </summary>
@@ -122,49 +119,57 @@ namespace NyaaRSSreader
         /// <param name="e"></param>
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            //不是head row
-            if (e.RowIndex != -1)
+            try
             {
- 
-                DataGridViewRow row = this.dataGridView1.Rows[e.RowIndex];
-            
-                //如果按下的是預覽按鈕
-                if (e.ColumnIndex == dataGridView1.Columns["btnView"].Index && e.RowIndex >= 0)
+                //不是head row
+                if (e.RowIndex != -1)
                 {
-                    if (row.Cells["articleLink"].Value != null)
-                    {
-                        MessageBox.Show(row.Cells["articleLink"].Value.ToString());
-                    }
-                    else {
-                        MessageBox.Show("文章連結為空");
-                    }
-                }
 
-                //如果按下的是下載按鈕
-                if (e.ColumnIndex == dataGridView1.Columns["btnDownload"].Index && e.RowIndex >= 0)
-                {
-                    if (row.Cells["DownloadLink"] != null)
-                    {
-                        WebClient wc = new WebClient();
-                        var data = wc.DownloadData(row.Cells["DownloadLink"].Value.ToString());
-                        string fileName = "";
+                    DataGridViewRow row = this.dataGridView1.Rows[e.RowIndex];
 
-                        //取得原始檔名
-                        if (!String.IsNullOrEmpty(wc.ResponseHeaders["Content-Disposition"]))
+                    //如果按下的是預覽按鈕
+                    if (e.ColumnIndex == dataGridView1.Columns["btnView"].Index && e.RowIndex >= 0)
+                    {
+                        if (row.Cells["articleLink"].Value != null)
                         {
-                            fileName = wc.ResponseHeaders["Content-Disposition"].Substring(wc.ResponseHeaders["Content-Disposition"].IndexOf("filename=") + 10).Replace("\"", "");
+                            MessageBox.Show(row.Cells["articleLink"].Value.ToString());
                         }
-                        //下載檔案
-                        using (WebClient webClient = new WebClient())
+                        else
                         {
-                            webClient.DownloadFile(row.Cells["DownloadLink"].Value.ToString(), textPath.Text +"\\"+ fileName);
+                            MessageBox.Show("文章連結為空");
                         }
                     }
-                    else {
-                        MessageBox.Show("下載連結為空");
-                    }
-                }
 
+                    //如果按下的是下載按鈕
+                    if (e.ColumnIndex == dataGridView1.Columns["btnDownload"].Index && e.RowIndex >= 0)
+                    {
+                        if (row.Cells["DownloadLink"] != null)
+                        {
+                            WebClient wc = new WebClient();
+                            var data = wc.DownloadData(row.Cells["DownloadLink"].Value.ToString());
+                            string fileName = "";
+
+                            //取得原始檔名
+                            if (!String.IsNullOrEmpty(wc.ResponseHeaders["Content-Disposition"]))
+                            {
+                                fileName = wc.ResponseHeaders["Content-Disposition"].Substring(wc.ResponseHeaders["Content-Disposition"].IndexOf("filename=") + 10).Replace("\"", "");
+                            }
+                            //下載檔案
+                            using (WebClient webClient = new WebClient())
+                            {
+                                webClient.DownloadFile(row.Cells["DownloadLink"].Value.ToString(), textPath.Text + "\\" + fileName);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("下載連結為空");
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show("發生錯誤"+ex.Message);
             }
         }
         #region 檔案下載路徑鈕、改變下拉選單、上一頁、下一頁、改變頁數
@@ -264,7 +269,7 @@ namespace NyaaRSSreader
             }
         }
         #endregion
-
+        #region 判斷上一頁、下一頁按鈕可否使用
         //判斷上一頁、下一頁按鈕可否使用
         public void ButtonEnable() {
             if (OffsetIndex == 1)
@@ -283,6 +288,7 @@ namespace NyaaRSSreader
                 btnNext.Enabled = true;
             }
         }
+        #endregion
         #region 檔案大小的排序事件
         //dataGridView排序事件
         private void dataGridView1_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
