@@ -232,7 +232,7 @@ namespace NyaaRSSreader
                 }
                 else
                 {
-                    if ((MessageBox.Show("查無預覽圖，是否直接開啟頁面?", "訊息",
+                    if ((MessageBox.Show("尚不支援此圖床，是否直接開啟頁面?", "訊息",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes))
                     {

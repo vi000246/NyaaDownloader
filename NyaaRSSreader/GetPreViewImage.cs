@@ -24,11 +24,15 @@ namespace NyaaRSSreader
             IRestResponse response = client.Execute(request);
             string html = response.Content;
 
+            #region 圖床判斷1 small換big 刪掉_thumb
             /*
-             目前圖床支援清單:
+             * 圖床清單:
              * imgdream,imgblank,img.yt,dimtus.com,imgstudio
              * damimage,imgseed,55888,imageteam,imagedecode,
              * hentai,imgchili
+             * 
+             * 邏輯:
+             * 以上的圖床，將small或_thumb替換掉就能顯示大圖
              */
 
             //分離出html裡的image Url
@@ -43,9 +47,11 @@ namespace NyaaRSSreader
             }
 
             //判斷能否取到大圖 
-            foreach (var strUrl in SmallImageList) { 
-                
+            foreach (var strUrl in SmallImageList) {
+                string newUrl = strUrl.Replace("small","big").Replace("_thumb","");
+                BigImageList.Add(newUrl);
             }
+            #endregion
 
             return BigImageList;
         }
