@@ -192,51 +192,64 @@ namespace NyaaRSSreader
         /// </summary>
         /// <param name="url"></param>
         public void ImagePopup(string url) {
-            //取得圖片網址
-            List<string> imageFileList = new GetPreViewImage().CallImageHanderdle(url);
-            //List<string> imageFileList = new List<string>() { "https://www.gstatic.com/webp/gallery/1.sm.jpg", "https://www.gstatic.com/webp/gallery/2.sm.jpg", "https://www.gstatic.com/webp/gallery/3.sm.jpg" };
-            if (imageFileList.Count > 0)
+            try
             {
-                using (Form form = new Form())
+                //取得圖片網址List
+                List<string> imageFileList = new GetPreViewImage().CallImageHanderdle(url);
+                //如果有解析到圖片
+                if (imageFileList.Count > 0)
                 {
-
-                    form.StartPosition = FormStartPosition.CenterScreen;
-
-                    int TotalHeight = 0;
-                    int MaxWidth = 0;
-                    //依據imageList的個數 產生出數個picturebox
-                    foreach (var imageFile in imageFileList)
+                    using (Form form = new Form())
                     {
-                        PictureBox eachPictureBox = new PictureBox();
-                        form.Controls.Add(eachPictureBox);
-                        eachPictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
-                        //將圖片下移總高度
-                        eachPictureBox.Top = TotalHeight;
-                        //載入圖片
-                        eachPictureBox.Load(imageFile);
-                        //將總高度加上此圖片的高度
-                        TotalHeight += eachPictureBox.Size.Height;
-                        //取得最大圖片的寬度
-                        if (eachPictureBox.Size.Width > MaxWidth)
-                            MaxWidth = eachPictureBox.Size.Width;
-                    }
 
-                    //改變form的大小
-                    form.Size = new Size(MaxWidth, TotalHeight);
-                    //設成半透明 記得拿掉
-                    form.Opacity = 0.1;
-                    form.ShowDialog();
+                        form.StartPosition = FormStartPosition.CenterScreen;
+
+                        int TotalHeight = 0;
+                        int MaxWidth = 0;
+                        //依據imageList的個數 產生出數個picturebox
+                        foreach (var imageFile in imageFileList)
+                        {
+                            PictureBox eachPictureBox = new PictureBox();
+                            form.Controls.Add(eachPictureBox);
+                            eachPictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
+                            //將圖片下移總高度
+                            eachPictureBox.Top = TotalHeight;
+                            //載入圖片
+                            eachPictureBox.Load(imageFile);
+                            //將總高度加上此圖片的高度
+                            TotalHeight += eachPictureBox.Size.Height;
+                            //取得最大圖片的寬度
+                            if (eachPictureBox.Size.Width > MaxWidth)
+                                MaxWidth = eachPictureBox.Size.Width;
+                        }
+
+                        //改變form的大小
+                        form.Size = new Size(MaxWidth, TotalHeight);
+                        //設成半透明 記得拿掉
+                        form.Opacity = 0.1;
+                        form.ShowDialog();
+                    }
                 }
-            }
-            else {
-                if ((MessageBox.Show("查無預覽圖，是否直接開啟頁面?", "訊息",
-    MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-    MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes))
+                else
                 {
-                    //用瀏覽器開啟網址
-                    ProcessStartInfo sInfo = new ProcessStartInfo(url);
-                    Process.Start(sInfo);
+                    if ((MessageBox.Show("查無預覽圖，是否直接開啟頁面?", "訊息",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes))
+                    {
+                        //用瀏覽器開啟網址
+                        ProcessStartInfo sInfo = new ProcessStartInfo(url);
+                        Process.Start(sInfo);
+                    }
                 }
+            }catch(Exception ex){
+                if ((MessageBox.Show("發生錯誤，是否直接開啟頁面?", "訊息",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes))
+                    {
+                        //用瀏覽器開啟網址
+                        ProcessStartInfo sInfo = new ProcessStartInfo(url);
+                        Process.Start(sInfo);
+                    }
             }
         }
         #endregion
