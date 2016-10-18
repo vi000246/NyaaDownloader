@@ -12,8 +12,11 @@ namespace NyaaRSSreader
         /// 依據圖片的網址 選擇要處理的method
         /// </summary>
         /// <param name="url"></param>
-        public void CallImageHanderdle(string url) { 
-            
+        public List<string> CallImageHanderdle(string url) 
+        {
+            List<string> imageList = new List<string>();
+
+            return imageList;
         }
     }
 }

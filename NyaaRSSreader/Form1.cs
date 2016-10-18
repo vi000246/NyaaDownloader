@@ -126,25 +126,31 @@ namespace NyaaRSSreader
                 {
 
                     DataGridViewRow row = this.dataGridView1.Rows[e.RowIndex];
-                    
+                    #region GridView的預覽按鈕Click
+                    //==============
                     //如果按下的是預覽按鈕
                     if (e.ColumnIndex == dataGridView1.Columns["btnView"].Index && e.RowIndex >= 0)
                     {
                         if (row.Cells["articleLink"].Value != null)
                         {
-                            //row.Cells["articleLink"].Value.ToString()
                             //只有RealLife類別才能用預覽圖
-                            if(!cbRssCate.Text.Contains("RealLife"))
+                            if (!cbRssCate.Text.Contains("RealLife"))
                                 MessageBox.Show("此類別尚不支援預覽圖功能");
                             else
-                                MessageBox.Show(row.Cells["articleLink"].Value.ToString());
+                                //彈出預覽圖視窗
+                            {
+                                ImagePopup(row.Cells["articleLink"].Value.ToString());
+                            }
                         }
                         else
                         {
                             MessageBox.Show("文章連結為空");
                         }
                     }
+                    #endregion
 
+                    #region GridView的下載按鈕click
+                    //==============
                     //如果按下的是下載按鈕
                     if (e.ColumnIndex == dataGridView1.Columns["btnDownload"].Index && e.RowIndex >= 0)
                     {
@@ -170,6 +176,7 @@ namespace NyaaRSSreader
                             MessageBox.Show("下載連結為空");
                         }
                     }
+                    #endregion
 
                 }
             }
@@ -177,6 +184,55 @@ namespace NyaaRSSreader
                 MessageBox.Show("發生錯誤"+ex.Message);
             }
         }
+
+        #region 傳入文章頁面 解析出圖片再popup出來
+        /// <summary>
+        /// 傳入文章頁面 解析出圖片再popup出來
+        /// </summary>
+        /// <param name="url"></param>
+        public void ImagePopup(string url) {
+            //取得圖片網址
+            List<string> imageFileList = new GetPreViewImage().CallImageHanderdle(url);
+            //List<string> imageFileList = new List<string>() { "https://www.gstatic.com/webp/gallery/1.sm.jpg", "https://www.gstatic.com/webp/gallery/2.sm.jpg", "https://www.gstatic.com/webp/gallery/3.sm.jpg" };
+            if (imageFileList.Count > 0)
+            {
+                using (Form form = new Form())
+                {
+
+                    form.StartPosition = FormStartPosition.CenterScreen;
+
+                    int TotalHeight = 0;
+                    int MaxWidth = 0;
+                    //依據imageList的個數 產生出數個picturebox
+                    foreach (var imageFile in imageFileList)
+                    {
+                        PictureBox eachPictureBox = new PictureBox();
+                        form.Controls.Add(eachPictureBox);
+                        eachPictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
+                        //將圖片下移總高度
+                        eachPictureBox.Top = TotalHeight;
+                        //載入圖片
+                        eachPictureBox.Load(imageFile);
+                        //將總高度加上此圖片的高度
+                        TotalHeight += eachPictureBox.Size.Height;
+                        //取得最大圖片的寬度
+                        if (eachPictureBox.Size.Width > MaxWidth)
+                            MaxWidth = eachPictureBox.Size.Width;
+                    }
+
+                    //改變form的大小
+                    form.Size = new Size(MaxWidth, TotalHeight);
+                    //設成半透明 記得拿掉
+                    form.Opacity = 0.1;
+                    form.ShowDialog();
+                }
+            }
+            else {
+                MessageBox.Show("查無預覽圖!!");
+            }
+        }
+        #endregion
+
         #region 檔案下載路徑鈕、改變下拉選單、上一頁、下一頁、改變頁數
 
         //當下拉選單發生選取事件時
