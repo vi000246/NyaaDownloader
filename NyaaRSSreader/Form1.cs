@@ -17,12 +17,12 @@ using System.Xml.Linq;
 
 namespace NyaaRSSreader
 {
-    public partial class Form1 : Form
+    public partial class Nyaa抓檔神器 : Form
     {
         //頁數 從第一頁開始
         public int OffsetIndex = 1;
 
-        public Form1()
+        public Nyaa抓檔神器()
         {
             InitializeComponent();
             //綁定下拉選單的物件
