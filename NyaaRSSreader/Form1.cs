@@ -126,13 +126,18 @@ namespace NyaaRSSreader
                 {
 
                     DataGridViewRow row = this.dataGridView1.Rows[e.RowIndex];
-
+                    
                     //如果按下的是預覽按鈕
                     if (e.ColumnIndex == dataGridView1.Columns["btnView"].Index && e.RowIndex >= 0)
                     {
                         if (row.Cells["articleLink"].Value != null)
                         {
-                            MessageBox.Show(row.Cells["articleLink"].Value.ToString());
+                            //row.Cells["articleLink"].Value.ToString()
+                            //只有RealLife類別才能用預覽圖
+                            if(!cbRssCate.Text.Contains("RealLife"))
+                                MessageBox.Show("此類別尚不支援預覽圖功能");
+                            else
+                                MessageBox.Show(row.Cells["articleLink"].Value.ToString());
                         }
                         else
                         {
