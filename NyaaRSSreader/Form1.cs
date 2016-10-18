@@ -81,7 +81,7 @@ namespace NyaaRSSreader
                     string pubDate = string.Empty;
                     if (DateTime.TryParse(item.Element("pubDate").Value, out myDate))
                     {
-                        pubDate = myDate.ToString("yyyy/MM/dd");
+                        pubDate = myDate.ToString("yyyy/MM/dd HH:mm");
                     }
 
                     string description = item.Element("description").Value;
