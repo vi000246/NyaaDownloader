@@ -118,7 +118,7 @@ namespace NyaaRSSreader
         {
             return url.Replace("_thumb", "");
         }
-        //改成big
+        //small改成big
         private static string Url_changeSmallToBig(string url) {
             return url.Replace("small","big");
         }
@@ -127,18 +127,18 @@ namespace NyaaRSSreader
         {
             return url;
         }
-        //imgchili
+        //imgchili專用
         private static string Url_imgchili(string url)
         {
             //將t10、t6、t100之類的字串換成i10、i6、i100
             return Regex.Replace(url, @"t(\d{0,3})\.", m => "i" + m.Groups[1].Value + ".");
         }
-        //ultraimg
+        //ultraimg專用
         private static string Url_ultraimg(string url)
         {
             return url.Replace(".md","");
         }
-        //biz
+        //biz專用
         private static string Url_biz(string url)
         {
             return url.Replace(".php?", "/") + ".jpg";

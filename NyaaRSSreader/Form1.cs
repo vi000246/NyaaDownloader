@@ -42,6 +42,7 @@ namespace NyaaRSSreader
             //頁數textbox的按下Enter事件
             this.textPage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(CheckEnterKeyPress);
         }
+        #region 綁定下拉選單的值
         /// <summary>
         /// 下拉選單的值
         /// </summary>
@@ -60,6 +61,7 @@ namespace NyaaRSSreader
         //選擇預設的選項 
         cbSort.SelectedIndex = Properties.Settings.Default.cbSortIndex;
         }
+        #endregion
 
         #region 將RSS取得的Xml字串轉成DataGridView
         /// <summary>
@@ -273,6 +275,7 @@ namespace NyaaRSSreader
                         form.Opacity = FormSetting.FormOpaticy;
                         form.ShowDialog();
                     }
+
                 }
                 else
                 {
@@ -295,6 +298,7 @@ namespace NyaaRSSreader
                         Process.Start(sInfo);
                     }
             }
+
         }
 
         //popup視窗的下載按鈕點擊事件
