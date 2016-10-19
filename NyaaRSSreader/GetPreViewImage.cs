@@ -43,6 +43,11 @@ namespace NyaaRSSreader
             List<string> BigImageList = new List<string>();
             List<string> SmallImageList = new List<string>();
 
+            #region 取出html裡全部的圖片網址 加到SmallImageList
+            #endregion
+
+            #region 判斷SmallImageList裡的url是哪個圖床 判斷成功加進BigImageList
+            #endregion
 
             #region 圖床判斷1 small換big 刪掉_thumb
             /*

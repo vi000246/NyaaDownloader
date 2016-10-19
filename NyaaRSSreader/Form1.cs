@@ -46,13 +46,7 @@ namespace NyaaRSSreader
         /// 下拉選單的值
         /// </summary>
         public void BindComboboxData(){
-            Dictionary<string, string>test = new Dictionary<string, string>();
-            test.Add("https://www.nyaa.se/?page=rss&cats=1_0", "Anime");
-            test.Add("https://www.nyaa.se/?page=rss&cats=3_0", "Audio");
-            test.Add("https://sukebei.nyaa.se/?page=rss&cats=8_0", "R18-RealLife");
-
-        
-        cbRssCate.DataSource = new BindingSource(test, null);
+        cbRssCate.DataSource = new BindingSource(FormSetting.CatalogueDropDownList, null);
         cbRssCate.DisplayMember = "Value";
         cbRssCate.ValueMember = "Key";
         //選擇預設的選項 
@@ -140,7 +134,7 @@ namespace NyaaRSSreader
                             //else
                                 //彈出預覽圖視窗
                            // {
-                                ImagePopup(row.Cells["articleLink"].Value.ToString());
+                            ImagePopup(row.Cells["articleLink"].Value.ToString(), row);
                             //}
                         }
                         else
@@ -157,20 +151,7 @@ namespace NyaaRSSreader
                     {
                         if (row.Cells["DownloadLink"] != null)
                         {
-                            WebClient wc = new WebClient();
-                            var data = wc.DownloadData(row.Cells["DownloadLink"].Value.ToString());
-                            string fileName = "";
-
-                            //取得原始檔名
-                            if (!String.IsNullOrEmpty(wc.ResponseHeaders["Content-Disposition"]))
-                            {
-                                fileName = wc.ResponseHeaders["Content-Disposition"].Substring(wc.ResponseHeaders["Content-Disposition"].IndexOf("filename=") + 10).Replace("\"", "");
-                            }
-                            //下載檔案
-                            using (WebClient webClient = new WebClient())
-                            {
-                                webClient.DownloadFile(row.Cells["DownloadLink"].Value.ToString(), textPath.Text + "\\" + fileName);
-                            }
+                            DownloadTorr(row.Cells["DownloadLink"].Value.ToString());
                         }
                         else
                         {
@@ -186,12 +167,33 @@ namespace NyaaRSSreader
             }
         }
 
+        /// <summary>
+        /// 下載Torr檔
+        /// </summary>
+        /// <param name="DownloadLink">Torr的下載連結</param>
+        public void DownloadTorr(string DownloadLink) {
+            WebClient wc = new WebClient();
+            var data = wc.DownloadData(DownloadLink);
+            string fileName = "";
+
+            //取得原始檔名
+            if (!String.IsNullOrEmpty(wc.ResponseHeaders["Content-Disposition"]))
+            {
+                fileName = wc.ResponseHeaders["Content-Disposition"].Substring(wc.ResponseHeaders["Content-Disposition"].IndexOf("filename=") + 10).Replace("\"", "");
+            }
+            //下載檔案
+            using (WebClient webClient = new WebClient())
+            {
+                webClient.DownloadFile(DownloadLink, textPath.Text + "\\" + fileName);
+            }
+        }
+
         #region 傳入文章頁面 解析出圖片再popup出來
         /// <summary>
         /// 傳入文章頁面 解析出圖片再popup出來
         /// </summary>
         /// <param name="url"></param>
-        public void ImagePopup(string url) {
+        public void ImagePopup(string url,DataGridViewRow Row) {
             try
             {
                 //取得圖片網址List
@@ -203,8 +205,13 @@ namespace NyaaRSSreader
                     {
 
                         form.StartPosition = FormStartPosition.CenterScreen;
+                        //popup視窗標題
+                        string Size = Row.Cells["Size"] == null ? "" : Row.Cells["Size"].Value.ToString();
+                        string Title = Row.Cells["Title"] == null ? "" : Row.Cells["Title"].Value.ToString();
+                        form.Text = "預覽圖 [" + Size + "] " + Title;
 
-                        int TotalHeight = 0;
+                        //因為已經有按鈕了 所以從按鈕高度開始插入picturebox
+                        int TotalHeight = FormSetting.PopupWindow.btnDownloadHeight;
                         int MaxWidth = 0;
                         //依據imageList的個數 產生出數個picturebox
                         foreach (var imageFile in imageFileList)
@@ -216,17 +223,34 @@ namespace NyaaRSSreader
                             eachPictureBox.Top = TotalHeight;
                             //載入圖片
                             eachPictureBox.Load(imageFile);
-                            //將總高度加上此圖片的高度
-                            TotalHeight += eachPictureBox.Size.Height;
+                            //如果總高度小於螢幕高度 將總高度加上此圖片的高度
+                            if (TotalHeight + eachPictureBox.Size.Height < Screen.PrimaryScreen.Bounds.Height)
+                                TotalHeight += eachPictureBox.Size.Height;
+                            else
+                                TotalHeight = Screen.PrimaryScreen.Bounds.Height;
                             //取得最大圖片的寬度
                             if (eachPictureBox.Size.Width > MaxWidth)
                                 MaxWidth = eachPictureBox.Size.Width;
                         }
-
                         //改變form的大小
                         form.Size = new Size(MaxWidth, TotalHeight);
-                        //設成半透明 記得拿掉
-                        form.Opacity = 0.1;
+
+                        //增加下載連結按鈕
+                        Button btnDownload = new Button();
+                        btnDownload.Width = FormSetting.PopupWindow.btnDownloadWidth;
+                        btnDownload.Height = FormSetting.PopupWindow.btnDownloadHeight;
+                        btnDownload.ForeColor = Color.Black;
+                        btnDownload.Text = "下載";
+                        //讓button置於最上面的中間
+                        btnDownload.Left = (form.ClientSize.Width - btnDownload.Width) / 2;
+                        btnDownload.Click += (sender, EventArgs) => { buttonDownload_Click(sender, EventArgs, Row.Cells["DownloadLink"]); }; ;
+                        form.Controls.Add(btnDownload);
+
+                        //如果預覽圖大於螢幕高度 就增加捲軸
+                        if (TotalHeight >= Screen.PrimaryScreen.Bounds.Height)
+                            form.AutoScroll = true;
+                        //表單透明度 記得拿掉
+                        form.Opacity = FormSetting.FormOpaticy;
                         form.ShowDialog();
                     }
                 }
@@ -251,6 +275,15 @@ namespace NyaaRSSreader
                         Process.Start(sInfo);
                     }
             }
+        }
+
+        //popup視窗的下載按鈕點擊事件
+        void buttonDownload_Click(object sender, EventArgs e, DataGridViewCell CellValue)
+        {
+            if (CellValue != null)
+                DownloadTorr(CellValue.Value.ToString());
+            else
+                MessageBox.Show("下載連結為空");
         }
         #endregion
 
