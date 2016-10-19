@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -154,7 +155,10 @@ namespace NyaaRSSreader
                             //else
                                 //彈出預覽圖視窗
                            // {
-                            ImagePopup(row.Cells["articleLink"].Value.ToString(), row);
+                            //ImagePopup(row.Cells["articleLink"].Value.ToString(), row);
+                            var t = new Thread(() => ImagePopup(row.Cells["articleLink"].Value.ToString(), row));
+                              t.Start();
+                            
                             //}
                         }
                         else

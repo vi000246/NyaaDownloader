@@ -116,7 +116,7 @@ namespace NyaaRSSreader
         //移除_thumb
         private static string Url_deleteThumb(string url)
         {
-            return url.Replace("_thumb", "");
+            return url.Replace("_thumb", "").Replace("viewer.php?file=", "images/");
         }
         //small改成big
         private static string Url_changeSmallToBig(string url) {

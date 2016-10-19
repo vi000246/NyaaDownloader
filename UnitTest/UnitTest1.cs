@@ -33,6 +33,19 @@ namespace UnitTest
             }
         }
 
+        [TestMethod]
+        //判斷imgdream能不能傳回大圖
+        public void Testimgdream()
+        {
+            //輸入小圖的網址 
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgdream.net/viewer.php?file=26132226521392290432.jpg");
+            Assert.IsTrue(urlList.Count > 0);
+            foreach (var url in urlList)
+            {
+                Assert.IsTrue(Regex.IsMatch(url, @"(?<url>http://imgdream.net/images/\d+.jpg)", RegexOptions.Singleline));
+            }
+        }
+
 
     }
 }
