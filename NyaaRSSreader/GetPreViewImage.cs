@@ -43,86 +43,110 @@ namespace NyaaRSSreader
             List<string> BigImageList = new List<string>();
             List<string> SmallImageList = new List<string>();
 
-            #region 取出html裡全部的圖片網址 加到SmallImageList
-            #endregion
-
-            #region 判斷SmallImageList裡的url是哪個圖床 判斷成功加進BigImageList
-            #endregion
-
-            #region 圖床判斷1 small換big 刪掉_thumb
-            /*
-             * 圖床清單:
-             * imgdream,imgblank,img.yt,dimtus.com,imgstudio
-             * damimage,imgseed,55888,imageteam,imagedecode,
-             * hentai,imgchili,ultraimg
-             * 以下兩個是直接開圖就好
-             * tinypic,pics.dmm.co.jp
-             * 
-             * 邏輯:
-             * 以上的圖床，將small或_thumb替換掉就能顯示大圖
-             */
-
-            //分離出html裡的image Url
-            Regex pattern = new Regex(
+            #region 取出html裡全部的圖片網址 
+            Regex ptAllUrl = new Regex(
                 //p.s. ?:是關閉括號的capture功能
-            @"(?<url>https?://[\d\w-_.]*(?:imgdream|ultraimg|imgblank|img.yt|dimtus|imgstudio|damimage|imgseed|55888|imageteam|imagedecode|hentai|tinypic|pics.dmm)(?:[\d\w-_./]*)[\d\w-_.]*.jpe?g)"
+            @"(?<url>(?:\w+):\/\/(?<domain>[\w@][\w.:@]+)\/?[\w\.?=%&=\-@/$,]*)"
             , RegexOptions.Multiline);
-            MatchCollection matchGuides = pattern.Matches(html);
-            foreach (Match guide in matchGuides)
-            {
-                SmallImageList.Add(guide.Groups["url"].ToString());
-            }
-
-            //判斷能否取到大圖 
-            foreach (var strUrl in SmallImageList)
-            {
-                string newUrl = strUrl.Replace("small", "big").Replace("_thumb", "").Replace(".md","");
-                BigImageList.Add(newUrl);
-            }
+            MatchCollection matchAllUrl = ptAllUrl.Matches(html);
             #endregion
 
-            #region 判斷imgchili
-            SmallImageList.Clear();
-            Regex pattern3 = new Regex(
-                //p.s. ?:是關閉括號的capture功能
-            @"(?<url>https?://[\d\w-_.]*(?:imgchili)(?:[\d\w-_./]*)[\d\w-_.]*.jpe?g)"
-            , RegexOptions.Multiline);
-            MatchCollection matchGuides3 = pattern3.Matches(html);
-            foreach (Match guide in matchGuides3)
+            #region 判斷Match到的url是哪個圖床 判斷成功呼叫取大圖method後加進BigImageList
+            foreach (Match guide in matchAllUrl)
             {
-                SmallImageList.Add(guide.Groups["url"].ToString());
-            }
+                //網址
+                string url=guide.Groups["url"].ToString();
+                //domain
+                string domain = guide.Groups["domain"].ToString();
 
-            //判斷能否取到大圖 
-            foreach (var strUrl in SmallImageList)
-            {
-                //將t10、t6、t100之類的字串換成i10、i6、i100
-                string newUrl = Regex.Replace(strUrl, @"t(\d{0,3})\.", m => "i" + m.Groups[1].Value);
-                BigImageList.Add(newUrl);
-            }
-            #endregion
+               /* 
+                * 從dictionary裡尋找相符於這個domain的委派 如果找到的話就呼叫他
+                * 例如domain="pics.dmm.co.jp" 就能找到dictonary裡key=dmm的value 
+                * 這個value就是委派的方法
+                *
+                */
+                var FuncGetBigImage = DicFuncGetbigImage
+                .FirstOrDefault(x => domain.Contains(x.Key))
+                .Value;
+                //如果有找到dictonary對應的方法 就呼叫它 並加到BigImageList
+                if (FuncGetBigImage != null)
+                {
+                    string bigImageUrl = FuncGetBigImage(url);
+                    //必須是圖片才能加到list
+                    if (Regex.IsMatch(bigImageUrl,@"(?:\w+):\/\/(?<domain>[\w@][\w.:@]+)\/?[\w\.?=%&=\-@/$,]*.jpe?g"))
+                        BigImageList.Add(bigImageUrl);
+                }
 
-            #region 判斷1dl.biz
-            SmallImageList.Clear();
-            Regex pattern2 = new Regex(
-                //p.s. ?:是關閉括號的capture功能
-            @"(?<url>https?://1dl.biz(?:[\d\w-_./\?]*)[\d\w-_.]*)"
-            , RegexOptions.Multiline);
-            MatchCollection matchGuides2 = pattern2.Matches(html);
-            foreach (Match guide in matchGuides2)
-            {
-                SmallImageList.Add(guide.Groups["url"].ToString());
-            }
 
-            //判斷能否取到大圖 
-            foreach (var strUrl in SmallImageList)
-            {
-                string newUrl = strUrl.Replace(".php?", "/") + ".jpg";
-                BigImageList.Add(newUrl);
             }
             #endregion
-
             return BigImageList;
         }
+
+        #region 取得大圖的各圖床委派
+        /// <summary>
+        /// 儲存各圖床需要叫用的方法 輸入網址會回傳大圖網址
+        /// 用法: string newUrl=functions["imgdream"]("http://www.test.com.tw");
+        /// </summary>
+        Dictionary<string, Func<string, string>> DicFuncGetbigImage =
+            new Dictionary<string, Func<string, string>>
+        {
+            //去除_thumb
+            { "imgdream", Url_deleteThumb },
+            //small改big
+            {"imgblank",Url_changeSmallToBig},
+            {"img.yt",Url_changeSmallToBig},
+            {"dimtus",Url_changeSmallToBig},
+            {"imgstudio",Url_changeSmallToBig},
+            {"damimage",Url_changeSmallToBig},
+            {"imgseed",Url_changeSmallToBig},
+            {"55888",Url_changeSmallToBig},
+            {"imageteam",Url_changeSmallToBig},
+            {"imagedecode",Url_changeSmallToBig},
+            {"hentai",Url_changeSmallToBig},
+            //直接回傳
+            {"pics.dmm",Url_Direct},
+            {"tinypic",Url_Direct},
+            //replace特定字串
+            {"imgchili",Url_imgchili},
+            {"ultraimg",Url_ultraimg},
+            {"1dl.biz",Url_biz}
+        };
+
+        //移除_thumb
+        private static string Url_deleteThumb(string url)
+        {
+            return url.Replace("_thumb", "");
+        }
+        //改成big
+        private static string Url_changeSmallToBig(string url) {
+            return url.Replace("small","big");
+        }
+        //直接回傳
+        private static string Url_Direct(string url)
+        {
+            return url;
+        }
+        //imgchili
+        private static string Url_imgchili(string url)
+        {
+            //將t10、t6、t100之類的字串換成i10、i6、i100
+            return Regex.Replace(url, @"t(\d{0,3})\.", m => "i" + m.Groups[1].Value + ".");
+        }
+        //ultraimg
+        private static string Url_ultraimg(string url)
+        {
+            return url.Replace(".md","");
+        }
+        //biz
+        private static string Url_biz(string url)
+        {
+            return url.Replace(".php?", "/") + ".jpg";
+        }
+
+        #endregion
+
+
+
     }
 }
