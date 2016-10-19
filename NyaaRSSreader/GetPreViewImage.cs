@@ -22,6 +22,13 @@ namespace NyaaRSSreader
             IRestResponse response = client.Execute(request);
             string html = response.Content;
 
+            //只取出html裡描述的部份 其他去掉
+            Regex pattern = new Regex(
+            @"<div\sclass=""viewdescription"">(?<content>.*)<h3>Files\sin\storrent\:</h3>"
+            , RegexOptions.Multiline);
+            Match content = pattern.Match(html);
+            html = content.Groups["content"].Value;
+
             return GetBigImageUrl(html);
         }
 
@@ -36,15 +43,13 @@ namespace NyaaRSSreader
             List<string> BigImageList = new List<string>();
             List<string> SmallImageList = new List<string>();
 
-            //只取出html裡描述的部份 其他去掉
-
 
             #region 圖床判斷1 small換big 刪掉_thumb
             /*
              * 圖床清單:
              * imgdream,imgblank,img.yt,dimtus.com,imgstudio
              * damimage,imgseed,55888,imageteam,imagedecode,
-             * hentai,imgchili,
+             * hentai,imgchili,ultraimg
              * 以下兩個是直接開圖就好
              * tinypic,pics.dmm.co.jp
              * 
@@ -55,7 +60,7 @@ namespace NyaaRSSreader
             //分離出html裡的image Url
             Regex pattern = new Regex(
                 //p.s. ?:是關閉括號的capture功能
-            @"(?<url>https?://[\d\w-_.]*(?:imgdream|imgblank|img.yt|dimtus|imgstudio|damimage|imgseed|55888|imageteam|imagedecode|hentai|tinypic|pics.dmm)(?:[\d\w-_./]*)[\d\w-_.]*.jpe?g)"
+            @"(?<url>https?://[\d\w-_.]*(?:imgdream|ultraimg|imgblank|img.yt|dimtus|imgstudio|damimage|imgseed|55888|imageteam|imagedecode|hentai|tinypic|pics.dmm)(?:[\d\w-_./]*)[\d\w-_.]*.jpe?g)"
             , RegexOptions.Multiline);
             MatchCollection matchGuides = pattern.Matches(html);
             foreach (Match guide in matchGuides)
@@ -66,7 +71,7 @@ namespace NyaaRSSreader
             //判斷能否取到大圖 
             foreach (var strUrl in SmallImageList)
             {
-                string newUrl = strUrl.Replace("small", "big").Replace("_thumb", "");
+                string newUrl = strUrl.Replace("small", "big").Replace("_thumb", "").Replace(".md","");
                 BigImageList.Add(newUrl);
             }
             #endregion
