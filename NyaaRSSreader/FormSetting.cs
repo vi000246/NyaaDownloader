@@ -10,7 +10,7 @@ namespace NyaaRSSreader
     {
         //主視窗透明度
         public static double FormOpaticy = 0.1;
-        //下拉選單的值
+        //下拉選單的值 RSS分類
         public static Dictionary<string, string>CatalogueDropDownList = new Dictionary<string, string>()
             {
             {"https://www.nyaa.se/?page=rss&cats=1_0","Anime"},
@@ -19,7 +19,7 @@ namespace NyaaRSSreader
             
             };
 
-        //下拉選單的值
+        //下拉選單的值 dataGrid排序
         public static Dictionary<string, string> SortDropDownList = new Dictionary<string, string>()
             {
             {"無","無"},
