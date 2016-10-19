@@ -19,6 +19,19 @@ namespace NyaaRSSreader
             
             };
 
+        //下拉選單的值
+        public static Dictionary<string, string> SortDropDownList = new Dictionary<string, string>()
+            {
+            {"無","無"},
+            {"title","標題 ↓"},
+            {"download","下載數量 ↓"},
+            {"size","檔案大小 ↓"},
+            {"Seeder","Seeder ↓"},
+            {"Leecher","Leecher ↓"},
+            {"Date","日期 ↓"},
+            };
+
+
         public static class PopupWindow 
         {
             //下載按鈕寬度

@@ -46,11 +46,19 @@ namespace NyaaRSSreader
         /// 下拉選單的值
         /// </summary>
         public void BindComboboxData(){
+            //分類下拉選單
         cbRssCate.DataSource = new BindingSource(FormSetting.CatalogueDropDownList, null);
         cbRssCate.DisplayMember = "Value";
         cbRssCate.ValueMember = "Key";
         //選擇預設的選項 
         cbRssCate.SelectedIndex = Properties.Settings.Default.ComboIndex;
+
+            //排序下拉選單
+        cbSort.DataSource = new BindingSource(FormSetting.SortDropDownList, null);
+        cbSort.DisplayMember = "Value";
+        cbSort.ValueMember = "Key";
+        //選擇預設的選項 
+        cbSort.SelectedIndex = Properties.Settings.Default.cbSortIndex;
         }
 
         #region 將RSS取得的Xml字串轉成DataGridView
@@ -93,6 +101,10 @@ namespace NyaaRSSreader
                     this.dataGridView1.Rows.Add(title, Size, Seeder, Leecher, Download, guid, link, pubDate);
                     //顯示目前頁數
                     textPage.Text = OffsetIndex.ToString();
+                    //依照下拉選單的值 排序DataGridView
+                    if (cbSort.SelectedValue.ToString()!="無")
+                        SortDataGrid();
+                    //設定上一步、下一步按鈕
                     ButtonEnable();
                 }
 
@@ -105,8 +117,14 @@ namespace NyaaRSSreader
         }
         #endregion
 
+        //排序DataGridView
+        public void SortDataGrid() {
+            //依據下拉選單的值 自動排序
+            this.dataGridView1.Sort(this.dataGridView1.Columns[cbSort.SelectedValue.ToString()], ListSortDirection.Descending);
 
+        }
 
+        #region Row Cell Button Click Event
         /// <summary>
         /// Row Cell Button Click Event
         /// </summary>
@@ -166,7 +184,8 @@ namespace NyaaRSSreader
                 MessageBox.Show("發生錯誤"+ex.Message);
             }
         }
-
+        #endregion
+        #region 下載Torr檔
         /// <summary>
         /// 下載Torr檔
         /// </summary>
@@ -187,6 +206,7 @@ namespace NyaaRSSreader
                 webClient.DownloadFile(DownloadLink, textPath.Text + "\\" + fileName);
             }
         }
+        #endregion
 
         #region 傳入文章頁面 解析出圖片再popup出來
         /// <summary>
@@ -308,6 +328,18 @@ namespace NyaaRSSreader
 
             }
         }
+        //排序下拉選單的值改變時
+        private void cbSort_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            //排序dataGrid
+            SortDataGrid();
+            //將下拉選單的值存到全域變數
+            Properties.Settings.Default.cbSortIndex = cbSort.SelectedIndex;
+            Properties.Settings.Default.Save();
+
+            
+        }
+
         //選擇檔案下載路徑按鈕
         private void btnBrowse_Click(object sender, EventArgs e)
         {
@@ -441,6 +473,8 @@ namespace NyaaRSSreader
             return result;
         }
         #endregion
+
+
 
 
 

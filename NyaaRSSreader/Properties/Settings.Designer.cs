@@ -46,5 +46,17 @@ namespace NyaaRSSreader.Properties {
                 this["ComboIndex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int cbSortIndex {
+            get {
+                return ((int)(this["cbSortIndex"]));
+            }
+            set {
+                this["cbSortIndex"] = value;
+            }
+        }
     }
 }
