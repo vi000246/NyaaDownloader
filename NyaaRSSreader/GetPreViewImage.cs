@@ -154,16 +154,28 @@ namespace NyaaRSSreader
             string BigImageUrl=string.Empty;
             //需要同意瀏覽18禁連結的cookie 無解
 
-            //如果是連結網址就判斷 縮圖網址就忽略
-            //if (Regex.IsMatch(url, @"^http://\w+.imgbabes.com/[\w/]+[\w\d\W]+.jpg.html$"))
-            //{
-            //    //加上同意18歲瀏覽的parameter
-            //    var client = new RestClient(url);
-            //    var request = new RestRequest("", Method.GET);
-            //    request.AddParameter("denial=", "", ParameterType.Cookie);
-            //    IRestResponse response = client.Execute(request);
-            //    string html = response.Content;
-            //}
+            //如果是連結網址就進行request 縮圖網址就忽略
+            if (Regex.IsMatch(url, @"^http://\w+.imgbabes.com/[\w/]+[\w\d\W]+.jpg.html$"))
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest("", Method.GET);
+                request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
+                //p.s. 加上同意18禁連結的cookie  這cookie是我手動複製來的 好像是動態組出來 反正過了 沒差
+                request.AddParameter("denial", "5894338b2ea172a823bf2d53ecc742f3", ParameterType.Cookie);
+                IRestResponse response = client.Execute(request);
+                //這是回傳的html
+                string html = response.Content;
+
+                //
+                Regex ptAllUrl = new Regex(
+                //p.s. ?:是關閉括號的capture功能
+                @"(?<url>http://\w+.imgbabes.com/files/(\w+/?)+.jpg)"
+                , RegexOptions.Multiline);
+                Match matchUrl = ptAllUrl.Match(html);
+                BigImageUrl = matchUrl.Groups["url"].Value;
+
+
+            }
 
             return BigImageUrl;
         }
