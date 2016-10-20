@@ -48,6 +48,19 @@ namespace UnitTest
         }
 
         [TestMethod]
+        //判斷imgbabes能不能傳回大圖
+        public void Testimgbabes()
+        {
+            //輸入小圖的網址 
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://fenix.imgbabes.com/i/00693/co8c12vu0lr0_t.jpg");
+            Assert.IsTrue(urlList.Count > 0);
+            foreach (var url in urlList)
+            {
+               // Assert.IsTrue(Regex.IsMatch(url, @"(?<url>http://imgdream.net/images/\d+.jpg)", RegexOptions.Singleline));
+            }
+        }
+
+        [TestMethod]
         //測試抓不到預覽圖時的事件 1.彈出提示訊息 2.不顯示訊息 3.直接在瀏覽器開啟
         public void TestImageNotFindWindow() {
             new Nyaa抓檔神器().ImageNotFindBehavior("http://www.google.com.tw/","na");

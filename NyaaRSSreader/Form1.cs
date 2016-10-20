@@ -257,13 +257,14 @@ namespace NyaaRSSreader
                             if (TotalHeight + eachPictureBox.Size.Height < Screen.PrimaryScreen.Bounds.Height)
                                 TotalHeight += eachPictureBox.Size.Height;
                             else
-                                TotalHeight = Screen.PrimaryScreen.Bounds.Height;
+                                TotalHeight = Screen.PrimaryScreen.Bounds.Height-50;
                             //取得最大圖片的寬度
                             if (eachPictureBox.Size.Width > MaxWidth)
                                 MaxWidth = eachPictureBox.Size.Width;
                         }
-                        //改變form的大小
-                        form.Size = new Size(MaxWidth, TotalHeight);
+                        //改變form的大小 如果小於setting裡的最小寬度 就設為最小寬度
+                        form.Size = new Size(MaxWidth < FormSetting.PopupWindow.popWindowMinWidth ? 
+                            FormSetting.PopupWindow.popWindowMinWidth : MaxWidth, TotalHeight);
 
                         //增加下載連結按鈕
                         Button btnDownload = new Button();
@@ -273,15 +274,25 @@ namespace NyaaRSSreader
                         btnDownload.Text = "下載";
                         //讓button置於最上面的中間
                         btnDownload.Left = (form.ClientSize.Width - btnDownload.Width) / 2;
-                        btnDownload.Click += (sender, EventArgs) => { 
-                            buttonDownload_Click(sender, EventArgs, Row.Cells["DownloadLink"]); 
-                        };
                         form.Controls.Add(btnDownload);
-                        //綁定popup window的熱鍵
-                        form.KeyDown += (sender, EventArgs) =>
-                        {
-                            PopFormHotKey(sender, EventArgs, form, Row.Cells["DownloadLink"]);
-                        };
+
+                        //增加熱鍵說明的label
+                        Label info = new Label();
+                        info.TextAlign = ContentAlignment.TopLeft;
+                        //C#顏色表 http://www.flounder.com/csharp_color_table.htm
+                        info.BackColor = Color.SkyBlue;
+                        info.Font = new Font("Arial", 10, FontStyle.Bold);
+                        string text = "熱鍵："+ Environment.NewLine + "(D):下載種子 (C):關閉視窗 (A):下載種子並關閉視窗";
+                        info.Text = text;
+                        info.AutoSize = true;
+                        form.Controls.Add(info);
+
+                        //綁定下載按鈕點擊事件
+                        btnDownload.Click += (sender, EventArgs) => buttonDownload_Click(sender, EventArgs, Row.Cells["DownloadLink"]);
+                        //啟用form的點擊事件
+                        form.KeyPreview = true;
+                        //綁定form的熱鍵
+                        form.KeyDown += (sender, e) => this.PopFormHotKey(sender, e, form, Row.Cells["DownloadLink"]);
 
                         //如果預覽圖大於螢幕高度 就增加捲軸
                         if (TotalHeight >= Screen.PrimaryScreen.Bounds.Height)
@@ -320,7 +331,8 @@ namespace NyaaRSSreader
         //綁定視窗的熱鍵
         void PopFormHotKey(object sender, KeyEventArgs e, Form form, DataGridViewCell CellValue)
         {
-            if (e.KeyCode==Keys.D) {
+            if (e.KeyCode == Keys.D || e.KeyCode == Keys.A)
+            {
                 if (CellValue != null)
                 {
                     var t = new Thread(() => DownloadTorr(CellValue.Value.ToString()));
@@ -330,7 +342,7 @@ namespace NyaaRSSreader
                     MessageBox.Show("下載連結為空");
             }
 
-            if (e.KeyCode == Keys.C)
+            if (e.KeyCode == Keys.C || e.KeyCode == Keys.A)
             {
                 form.Close();
                 form.Dispose();

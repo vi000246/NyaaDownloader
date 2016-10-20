@@ -39,15 +39,6 @@
             this.textPath = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.labelPopupCombo = new System.Windows.Forms.Label();
-            this.cbPopWindowBehavior = new System.Windows.Forms.ComboBox();
-            this.labelSort = new System.Windows.Forms.Label();
-            this.cbSort = new System.Windows.Forms.ComboBox();
-            this.btnPrev = new System.Windows.Forms.Button();
-            this.btnNext = new System.Windows.Forms.Button();
-            this.textPage = new System.Windows.Forms.TextBox();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Seeder = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -58,6 +49,15 @@
             this.download = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnView = new System.Windows.Forms.DataGridViewButtonColumn();
             this.btnDownload = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.labelPopupCombo = new System.Windows.Forms.Label();
+            this.cbPopWindowBehavior = new System.Windows.Forms.ComboBox();
+            this.labelSort = new System.Windows.Forms.Label();
+            this.cbSort = new System.Windows.Forms.ComboBox();
+            this.btnPrev = new System.Windows.Forms.Button();
+            this.btnNext = new System.Windows.Forms.Button();
+            this.textPage = new System.Windows.Forms.TextBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -145,106 +145,6 @@
             this.dataGridView1.TabIndex = 5;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dataGridView1_SortCompare);
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.labelPopupCombo);
-            this.panel1.Controls.Add(this.cbPopWindowBehavior);
-            this.panel1.Controls.Add(this.labelSort);
-            this.panel1.Controls.Add(this.cbSort);
-            this.panel1.Controls.Add(this.btnBrowse);
-            this.panel1.Controls.Add(this.lbTorrPath);
-            this.panel1.Controls.Add(this.textPath);
-            this.panel1.Controls.Add(this.cbRssCate);
-            this.panel1.Controls.Add(this.lbRssCate);
-            this.panel1.Location = new System.Drawing.Point(14, -3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(837, 100);
-            this.panel1.TabIndex = 6;
-            // 
-            // labelPopupCombo
-            // 
-            this.labelPopupCombo.AutoSize = true;
-            this.labelPopupCombo.Location = new System.Drawing.Point(450, 54);
-            this.labelPopupCombo.Name = "labelPopupCombo";
-            this.labelPopupCombo.Size = new System.Drawing.Size(125, 12);
-            this.labelPopupCombo.TabIndex = 8;
-            this.labelPopupCombo.Text = "查無預覽圖預設行為：";
-            // 
-            // cbPopWindowBehavior
-            // 
-            this.cbPopWindowBehavior.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPopWindowBehavior.FormattingEnabled = true;
-            this.cbPopWindowBehavior.Items.AddRange(new object[] {
-            "提醒視窗",
-            "忽略",
-            "自動開啟連結"});
-            this.cbPopWindowBehavior.Location = new System.Drawing.Point(452, 75);
-            this.cbPopWindowBehavior.Name = "cbPopWindowBehavior";
-            this.cbPopWindowBehavior.Size = new System.Drawing.Size(121, 20);
-            this.cbPopWindowBehavior.TabIndex = 7;
-            this.cbPopWindowBehavior.SelectionChangeCommitted += new System.EventHandler(this.cbPopWindowBehavior_SelectionChangeCommitted);
-            // 
-            // labelSort
-            // 
-            this.labelSort.AutoSize = true;
-            this.labelSort.Location = new System.Drawing.Point(296, 54);
-            this.labelSort.Name = "labelSort";
-            this.labelSort.Size = new System.Drawing.Size(89, 12);
-            this.labelSort.TabIndex = 6;
-            this.labelSort.Text = "單頁預設排序：";
-            // 
-            // cbSort
-            // 
-            this.cbSort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSort.FormattingEnabled = true;
-            this.cbSort.Location = new System.Drawing.Point(298, 75);
-            this.cbSort.Name = "cbSort";
-            this.cbSort.Size = new System.Drawing.Size(121, 20);
-            this.cbSort.TabIndex = 5;
-            this.cbSort.SelectionChangeCommitted += new System.EventHandler(this.cbSort_SelectionChangeCommitted);
-            // 
-            // btnPrev
-            // 
-            this.btnPrev.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnPrev.Enabled = false;
-            this.btnPrev.Location = new System.Drawing.Point(9, 5);
-            this.btnPrev.Name = "btnPrev";
-            this.btnPrev.Size = new System.Drawing.Size(69, 23);
-            this.btnPrev.TabIndex = 7;
-            this.btnPrev.Text = "上一頁";
-            this.btnPrev.UseVisualStyleBackColor = true;
-            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
-            // 
-            // btnNext
-            // 
-            this.btnNext.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnNext.Location = new System.Drawing.Point(128, 5);
-            this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(79, 23);
-            this.btnNext.TabIndex = 7;
-            this.btnNext.Text = "下一頁";
-            this.btnNext.UseVisualStyleBackColor = true;
-            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
-            // 
-            // textPage
-            // 
-            this.textPage.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.textPage.Location = new System.Drawing.Point(85, 5);
-            this.textPage.Name = "textPage";
-            this.textPage.Size = new System.Drawing.Size(39, 22);
-            this.textPage.TabIndex = 8;
-            // 
-            // panel2
-            // 
-            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.panel2.Controls.Add(this.btnPrev);
-            this.panel2.Controls.Add(this.btnNext);
-            this.panel2.Controls.Add(this.textPage);
-            this.panel2.Location = new System.Drawing.Point(373, 431);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(214, 32);
-            this.panel2.TabIndex = 9;
             // 
             // Title
             // 
@@ -349,6 +249,107 @@
             this.btnDownload.Text = "下載";
             this.btnDownload.UseColumnTextForButtonValue = true;
             this.btnDownload.Width = 70;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.labelPopupCombo);
+            this.panel1.Controls.Add(this.cbPopWindowBehavior);
+            this.panel1.Controls.Add(this.labelSort);
+            this.panel1.Controls.Add(this.cbSort);
+            this.panel1.Controls.Add(this.btnBrowse);
+            this.panel1.Controls.Add(this.lbTorrPath);
+            this.panel1.Controls.Add(this.textPath);
+            this.panel1.Controls.Add(this.cbRssCate);
+            this.panel1.Controls.Add(this.lbRssCate);
+            this.panel1.Location = new System.Drawing.Point(14, -3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(837, 100);
+            this.panel1.TabIndex = 6;
+            // 
+            // labelPopupCombo
+            // 
+            this.labelPopupCombo.AutoSize = true;
+            this.labelPopupCombo.Location = new System.Drawing.Point(450, 54);
+            this.labelPopupCombo.Name = "labelPopupCombo";
+            this.labelPopupCombo.Size = new System.Drawing.Size(125, 12);
+            this.labelPopupCombo.TabIndex = 8;
+            this.labelPopupCombo.Text = "查無預覽圖預設行為：";
+            // 
+            // cbPopWindowBehavior
+            // 
+            this.cbPopWindowBehavior.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPopWindowBehavior.FormattingEnabled = true;
+            this.cbPopWindowBehavior.Items.AddRange(new object[] {
+            "提醒視窗",
+            "忽略",
+            "自動開啟連結"});
+            this.cbPopWindowBehavior.Location = new System.Drawing.Point(452, 75);
+            this.cbPopWindowBehavior.Name = "cbPopWindowBehavior";
+            this.cbPopWindowBehavior.Size = new System.Drawing.Size(121, 20);
+            this.cbPopWindowBehavior.TabIndex = 7;
+            this.cbPopWindowBehavior.SelectionChangeCommitted += new System.EventHandler(this.cbPopWindowBehavior_SelectionChangeCommitted);
+            // 
+            // labelSort
+            // 
+            this.labelSort.AutoSize = true;
+            this.labelSort.Font = new System.Drawing.Font("新細明體", 9F);
+            this.labelSort.Location = new System.Drawing.Point(296, 54);
+            this.labelSort.Name = "labelSort";
+            this.labelSort.Size = new System.Drawing.Size(89, 12);
+            this.labelSort.TabIndex = 6;
+            this.labelSort.Text = "單頁預設排序：";
+            // 
+            // cbSort
+            // 
+            this.cbSort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSort.FormattingEnabled = true;
+            this.cbSort.Location = new System.Drawing.Point(298, 75);
+            this.cbSort.Name = "cbSort";
+            this.cbSort.Size = new System.Drawing.Size(121, 20);
+            this.cbSort.TabIndex = 5;
+            this.cbSort.SelectionChangeCommitted += new System.EventHandler(this.cbSort_SelectionChangeCommitted);
+            // 
+            // btnPrev
+            // 
+            this.btnPrev.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnPrev.Enabled = false;
+            this.btnPrev.Location = new System.Drawing.Point(9, 5);
+            this.btnPrev.Name = "btnPrev";
+            this.btnPrev.Size = new System.Drawing.Size(69, 23);
+            this.btnPrev.TabIndex = 7;
+            this.btnPrev.Text = "上一頁";
+            this.btnPrev.UseVisualStyleBackColor = true;
+            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
+            // 
+            // btnNext
+            // 
+            this.btnNext.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnNext.Location = new System.Drawing.Point(128, 5);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(79, 23);
+            this.btnNext.TabIndex = 7;
+            this.btnNext.Text = "下一頁";
+            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            // 
+            // textPage
+            // 
+            this.textPage.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.textPage.Location = new System.Drawing.Point(85, 5);
+            this.textPage.Name = "textPage";
+            this.textPage.Size = new System.Drawing.Size(39, 22);
+            this.textPage.TabIndex = 8;
+            // 
+            // panel2
+            // 
+            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.panel2.Controls.Add(this.btnPrev);
+            this.panel2.Controls.Add(this.btnNext);
+            this.panel2.Controls.Add(this.textPage);
+            this.panel2.Location = new System.Drawing.Point(373, 431);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(214, 32);
+            this.panel2.TabIndex = 9;
             // 
             // Nyaa抓檔神器
             // 

@@ -112,7 +112,9 @@ namespace NyaaRSSreader
             //replace特定字串
             {"imgchili",Url_imgchili},
             {"ultraimg",Url_ultraimg},
-            {"1dl.biz",Url_biz}
+            {"1dl.biz",Url_biz},
+            //imgbabes
+            {"imgbabes",Url_imgbabes}
         };
 
         //移除_thumb
@@ -144,6 +146,18 @@ namespace NyaaRSSreader
         private static string Url_biz(string url)
         {
             return url.Replace(".php?", "/") + ".jpg";
+        }
+
+        //imgbabes專用
+        private static string Url_imgbabes(string url)
+        {
+            string BigImageUrl=string.Empty;
+            var client = new RestClient(url);
+            var request = new RestRequest("", Method.GET);
+            IRestResponse response = client.Execute(request);
+            string html = response.Content;
+
+            return BigImageUrl;
         }
 
         #endregion

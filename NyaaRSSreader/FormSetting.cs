@@ -38,6 +38,9 @@ namespace NyaaRSSreader
             public static int btnDownloadWidth = 150;
             //下載按鈕高度
             public static int btnDownloadHeight = 35;
+
+            //彈出視窗最小寬度
+            public static int popWindowMinWidth = 1000;
         }
     }
 }
