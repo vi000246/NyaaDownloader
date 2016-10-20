@@ -277,6 +277,11 @@ namespace NyaaRSSreader
                             buttonDownload_Click(sender, EventArgs, Row.Cells["DownloadLink"]); 
                         };
                         form.Controls.Add(btnDownload);
+                        //綁定popup window的熱鍵
+                        form.KeyDown += (sender, EventArgs) =>
+                        {
+                            PopFormHotKey(sender, EventArgs, form, Row.Cells["DownloadLink"]);
+                        };
 
                         //如果預覽圖大於螢幕高度 就增加捲軸
                         if (TotalHeight >= Screen.PrimaryScreen.Bounds.Height)
@@ -309,6 +314,27 @@ namespace NyaaRSSreader
             }
             else
                 MessageBox.Show("下載連結為空");
+        }
+
+
+        //綁定視窗的熱鍵
+        void PopFormHotKey(object sender, KeyEventArgs e, Form form, DataGridViewCell CellValue)
+        {
+            if (e.KeyCode==Keys.D) {
+                if (CellValue != null)
+                {
+                    var t = new Thread(() => DownloadTorr(CellValue.Value.ToString()));
+                    t.Start();
+                }
+                else
+                    MessageBox.Show("下載連結為空");
+            }
+
+            if (e.KeyCode == Keys.C)
+            {
+                form.Close();
+                form.Dispose();
+            }
         }
 
         /// <summary>
