@@ -48,15 +48,15 @@ namespace UnitTest
         }
 
         [TestMethod]
-        //判斷imgbabes能不能傳回大圖
-        public void Testimgbabes()
+        //判斷imgbabes和imgflare能不能傳回大圖
+        public void TestimgbabesAndImgFlare()
         {
             //輸入小圖的網址 
-            var urlList = new GetPreViewImage().GetBigImageUrl("http://www.imgbabes.com/r4dq19sff9dp/thumbs20140317153605.jpg.html");
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://www.imgbabes.com/r4dq19sff9dp/thumbs20140317153605.jpg.html  http://www.imgflare.com/lg4ssabtlplz/1fset00466jp-2.jpg.html");
             Assert.IsTrue(urlList.Count > 0);
             foreach (var url in urlList)
             {
-                Assert.IsTrue(Regex.IsMatch(url, @"(?<url>http://\w+.imgbabes.com/files/(\w+/?)+.jpg)", RegexOptions.Singleline));
+                Assert.IsTrue(Regex.IsMatch(url, @"http://\w+.(imgflare|imgbabes).com/files/[\w/-]+.jpg", RegexOptions.Singleline));
             }
         }
 
