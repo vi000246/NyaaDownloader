@@ -39,23 +39,25 @@
             this.textPath = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Seeder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Leecher = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.articleLink = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DownloadLink = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Size = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.download = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnView = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.btnDownload = new System.Windows.Forms.DataGridViewButtonColumn();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.labelPopupCombo = new System.Windows.Forms.Label();
+            this.cbPopWindowBehavior = new System.Windows.Forms.ComboBox();
+            this.labelSort = new System.Windows.Forms.Label();
+            this.cbSort = new System.Windows.Forms.ComboBox();
             this.btnPrev = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
             this.textPage = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.cbSort = new System.Windows.Forms.ComboBox();
-            this.labelSort = new System.Windows.Forms.Label();
-            this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Size = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Seeder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Leecher = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.download = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.articleLink = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DownloadLink = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnView = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.btnDownload = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -117,13 +119,13 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Title,
-            this.Size,
+            this.Date,
             this.Seeder,
             this.Leecher,
-            this.download,
             this.articleLink,
             this.DownloadLink,
-            this.Date,
+            this.Size,
+            this.download,
             this.btnView,
             this.btnDownload});
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -144,8 +146,114 @@
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dataGridView1_SortCompare);
             // 
+            // Title
+            // 
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
+            this.Title.DefaultCellStyle = dataGridViewCellStyle1;
+            this.Title.FillWeight = 166.434F;
+            this.Title.HeaderText = "標題";
+            this.Title.MinimumWidth = 180;
+            this.Title.Name = "Title";
+            // 
+            // Date
+            // 
+            this.Date.FillWeight = 127.7135F;
+            this.Date.HeaderText = "發佈日期";
+            this.Date.MinimumWidth = 20;
+            this.Date.Name = "Date";
+            this.Date.ReadOnly = true;
+            // 
+            // Seeder
+            // 
+            this.Seeder.FillWeight = 61.00914F;
+            this.Seeder.HeaderText = "Seeders";
+            this.Seeder.MinimumWidth = 20;
+            this.Seeder.Name = "Seeder";
+            this.Seeder.ReadOnly = true;
+            // 
+            // Leecher
+            // 
+            this.Leecher.FillWeight = 55.71515F;
+            this.Leecher.HeaderText = "Leechers";
+            this.Leecher.MinimumWidth = 20;
+            this.Leecher.Name = "Leecher";
+            this.Leecher.ReadOnly = true;
+            // 
+            // articleLink
+            // 
+            this.articleLink.HeaderText = "文章連結";
+            this.articleLink.MinimumWidth = 10;
+            this.articleLink.Name = "articleLink";
+            this.articleLink.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.articleLink.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.articleLink.Visible = false;
+            // 
+            // DownloadLink
+            // 
+            this.DownloadLink.HeaderText = "下載連結";
+            this.DownloadLink.MinimumWidth = 10;
+            this.DownloadLink.Name = "DownloadLink";
+            this.DownloadLink.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.DownloadLink.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.DownloadLink.Visible = false;
+            // 
+            // Size
+            // 
+            this.Size.FillWeight = 145.0105F;
+            this.Size.HeaderText = "檔案大小";
+            this.Size.MinimumWidth = 50;
+            this.Size.Name = "Size";
+            this.Size.ReadOnly = true;
+            // 
+            // download
+            // 
+            this.download.FillWeight = 44.11765F;
+            this.download.HeaderText = "Downloads";
+            this.download.MinimumWidth = 30;
+            this.download.Name = "download";
+            this.download.ReadOnly = true;
+            // 
+            // btnView
+            // 
+            this.btnView.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Tomato;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.NullValue = "預覽圖";
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Brown;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
+            this.btnView.DefaultCellStyle = dataGridViewCellStyle2;
+            this.btnView.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnView.HeaderText = "文章連結";
+            this.btnView.Name = "btnView";
+            this.btnView.Text = "預覽圖";
+            this.btnView.UseColumnTextForButtonValue = true;
+            this.btnView.Width = 59;
+            // 
+            // btnDownload
+            // 
+            this.btnDownload.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.Tomato;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle3.NullValue = "下載";
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.Brown;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White;
+            this.btnDownload.DefaultCellStyle = dataGridViewCellStyle3;
+            this.btnDownload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDownload.HeaderText = "下載Torrent";
+            this.btnDownload.Name = "btnDownload";
+            this.btnDownload.Text = "下載";
+            this.btnDownload.UseColumnTextForButtonValue = true;
+            this.btnDownload.Width = 70;
+            // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.labelPopupCombo);
+            this.panel1.Controls.Add(this.cbPopWindowBehavior);
             this.panel1.Controls.Add(this.labelSort);
             this.panel1.Controls.Add(this.cbSort);
             this.panel1.Controls.Add(this.btnBrowse);
@@ -157,6 +265,48 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(837, 100);
             this.panel1.TabIndex = 6;
+            // 
+            // labelPopupCombo
+            // 
+            this.labelPopupCombo.AutoSize = true;
+            this.labelPopupCombo.Location = new System.Drawing.Point(345, 10);
+            this.labelPopupCombo.Name = "labelPopupCombo";
+            this.labelPopupCombo.Size = new System.Drawing.Size(125, 12);
+            this.labelPopupCombo.TabIndex = 8;
+            this.labelPopupCombo.Text = "查無預覽圖預設行為：";
+            // 
+            // cbPopWindowBehavior
+            // 
+            this.cbPopWindowBehavior.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPopWindowBehavior.FormattingEnabled = true;
+            this.cbPopWindowBehavior.Items.AddRange(new object[] {
+            "提醒視窗",
+            "忽略",
+            "自動開啟連結"});
+            this.cbPopWindowBehavior.Location = new System.Drawing.Point(345, 28);
+            this.cbPopWindowBehavior.Name = "cbPopWindowBehavior";
+            this.cbPopWindowBehavior.Size = new System.Drawing.Size(121, 20);
+            this.cbPopWindowBehavior.TabIndex = 7;
+            this.cbPopWindowBehavior.SelectionChangeCommitted += new System.EventHandler(this.cbPopWindowBehavior_SelectionChangeCommitted);
+            // 
+            // labelSort
+            // 
+            this.labelSort.AutoSize = true;
+            this.labelSort.Location = new System.Drawing.Point(196, 11);
+            this.labelSort.Name = "labelSort";
+            this.labelSort.Size = new System.Drawing.Size(89, 12);
+            this.labelSort.TabIndex = 6;
+            this.labelSort.Text = "單頁預設排序：";
+            // 
+            // cbSort
+            // 
+            this.cbSort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSort.FormattingEnabled = true;
+            this.cbSort.Location = new System.Drawing.Point(196, 29);
+            this.cbSort.Name = "cbSort";
+            this.cbSort.Size = new System.Drawing.Size(121, 20);
+            this.cbSort.TabIndex = 5;
+            this.cbSort.SelectionChangeCommitted += new System.EventHandler(this.cbSort_SelectionChangeCommitted);
             // 
             // btnPrev
             // 
@@ -200,129 +350,6 @@
             this.panel2.Size = new System.Drawing.Size(214, 32);
             this.panel2.TabIndex = 9;
             // 
-            // cbSort
-            // 
-            this.cbSort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSort.FormattingEnabled = true;
-            this.cbSort.Location = new System.Drawing.Point(196, 29);
-            this.cbSort.Name = "cbSort";
-            this.cbSort.Size = new System.Drawing.Size(121, 20);
-            this.cbSort.TabIndex = 5;
-            this.cbSort.SelectionChangeCommitted += new System.EventHandler(this.cbSort_SelectionChangeCommitted);
-            // 
-            // labelSort
-            // 
-            this.labelSort.AutoSize = true;
-            this.labelSort.Location = new System.Drawing.Point(196, 11);
-            this.labelSort.Name = "labelSort";
-            this.labelSort.Size = new System.Drawing.Size(89, 12);
-            this.labelSort.TabIndex = 6;
-            this.labelSort.Text = "單頁預設排序：";
-            // 
-            // Title
-            // 
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
-            this.Title.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Title.FillWeight = 166.434F;
-            this.Title.HeaderText = "標題";
-            this.Title.MinimumWidth = 180;
-            this.Title.Name = "Title";
-            // 
-            // Size
-            // 
-            this.Size.FillWeight = 145.0105F;
-            this.Size.HeaderText = "檔案大小";
-            this.Size.MinimumWidth = 50;
-            this.Size.Name = "Size";
-            this.Size.ReadOnly = true;
-            // 
-            // Seeder
-            // 
-            this.Seeder.FillWeight = 61.00914F;
-            this.Seeder.HeaderText = "Seeders";
-            this.Seeder.MinimumWidth = 20;
-            this.Seeder.Name = "Seeder";
-            this.Seeder.ReadOnly = true;
-            // 
-            // Leecher
-            // 
-            this.Leecher.FillWeight = 55.71515F;
-            this.Leecher.HeaderText = "Leechers";
-            this.Leecher.MinimumWidth = 20;
-            this.Leecher.Name = "Leecher";
-            this.Leecher.ReadOnly = true;
-            // 
-            // download
-            // 
-            this.download.FillWeight = 44.11765F;
-            this.download.HeaderText = "Downloads";
-            this.download.MinimumWidth = 30;
-            this.download.Name = "download";
-            this.download.ReadOnly = true;
-            // 
-            // articleLink
-            // 
-            this.articleLink.HeaderText = "文章連結";
-            this.articleLink.MinimumWidth = 10;
-            this.articleLink.Name = "articleLink";
-            this.articleLink.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.articleLink.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.articleLink.Visible = false;
-            // 
-            // DownloadLink
-            // 
-            this.DownloadLink.HeaderText = "下載連結";
-            this.DownloadLink.MinimumWidth = 10;
-            this.DownloadLink.Name = "DownloadLink";
-            this.DownloadLink.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.DownloadLink.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.DownloadLink.Visible = false;
-            // 
-            // Date
-            // 
-            this.Date.FillWeight = 127.7135F;
-            this.Date.HeaderText = "發佈日期";
-            this.Date.MinimumWidth = 20;
-            this.Date.Name = "Date";
-            this.Date.ReadOnly = true;
-            // 
-            // btnView
-            // 
-            this.btnView.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Tomato;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.NullValue = "預覽圖";
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Brown;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
-            this.btnView.DefaultCellStyle = dataGridViewCellStyle2;
-            this.btnView.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnView.HeaderText = "文章連結";
-            this.btnView.Name = "btnView";
-            this.btnView.Text = "預覽圖";
-            this.btnView.UseColumnTextForButtonValue = true;
-            this.btnView.Width = 59;
-            // 
-            // btnDownload
-            // 
-            this.btnDownload.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.Tomato;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle3.NullValue = "下載";
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.Brown;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White;
-            this.btnDownload.DefaultCellStyle = dataGridViewCellStyle3;
-            this.btnDownload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDownload.HeaderText = "下載Torrent";
-            this.btnDownload.Name = "btnDownload";
-            this.btnDownload.Text = "下載";
-            this.btnDownload.UseColumnTextForButtonValue = true;
-            this.btnDownload.Width = 70;
-            // 
             // Nyaa抓檔神器
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -359,15 +386,17 @@
         private System.Windows.Forms.ComboBox cbSort;
         private System.Windows.Forms.Label labelSort;
         private System.Windows.Forms.DataGridViewTextBoxColumn Title;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Size;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn Seeder;
         private System.Windows.Forms.DataGridViewTextBoxColumn Leecher;
-        private System.Windows.Forms.DataGridViewTextBoxColumn download;
         private System.Windows.Forms.DataGridViewTextBoxColumn articleLink;
         private System.Windows.Forms.DataGridViewTextBoxColumn DownloadLink;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Size;
+        private System.Windows.Forms.DataGridViewTextBoxColumn download;
         private System.Windows.Forms.DataGridViewButtonColumn btnView;
         private System.Windows.Forms.DataGridViewButtonColumn btnDownload;
+        private System.Windows.Forms.Label labelPopupCombo;
+        private System.Windows.Forms.ComboBox cbPopWindowBehavior;
     }
 }
 

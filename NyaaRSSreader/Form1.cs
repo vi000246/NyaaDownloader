@@ -61,6 +61,9 @@ namespace NyaaRSSreader
         cbSort.ValueMember = "Key";
         //選擇預設的選項 
         cbSort.SelectedIndex = Properties.Settings.Default.cbSortIndex;
+
+        //查無預覽圖預設行為
+        cbPopWindowBehavior.SelectedIndex = Properties.Settings.Default.cbNotFindImage;
         }
         #endregion
 
@@ -100,8 +103,8 @@ namespace NyaaRSSreader
                     string Size = match.Groups["size"].Value;
                     string Leecher = match.Groups["leecher"].Value;
                     string Seeder = match.Groups["seeder"].Value;
-                    //將資料綁定到dataGridView
-                    this.dataGridView1.Rows.Add(title, Size, Seeder, Leecher, Download, guid, link, pubDate);
+                    //將資料綁定到dataGridView (標題、日期、serder、leecher、文章連結(hide)、下載連結(hide)、檔案大小、下載數量)
+                    this.dataGridView1.Rows.Add(title, pubDate, Seeder, Leecher, guid, link,Size,Download);
                     //顯示目前頁數
                     textPage.Text = OffsetIndex.ToString();
                     //依照下拉選單的值 排序DataGridView
@@ -175,7 +178,8 @@ namespace NyaaRSSreader
                     {
                         if (row.Cells["DownloadLink"] != null)
                         {
-                            DownloadTorr(row.Cells["DownloadLink"].Value.ToString());
+                            var t = new Thread(() => DownloadTorr(row.Cells["DownloadLink"].Value.ToString()));
+                            t.Start();
                         }
                         else
                         {
@@ -214,7 +218,7 @@ namespace NyaaRSSreader
         }
         #endregion
 
-        #region 傳入文章頁面 解析出圖片再popup出來
+        #region 傳入文章頁面 解析出圖片再popup出來  、popup視窗的下載按鈕點擊事件 、查無預覽圖提示視窗
         /// <summary>
         /// 傳入文章頁面 解析出圖片再popup出來
         /// </summary>
@@ -269,7 +273,9 @@ namespace NyaaRSSreader
                         btnDownload.Text = "下載";
                         //讓button置於最上面的中間
                         btnDownload.Left = (form.ClientSize.Width - btnDownload.Width) / 2;
-                        btnDownload.Click += (sender, EventArgs) => { buttonDownload_Click(sender, EventArgs, Row.Cells["DownloadLink"]); }; ;
+                        btnDownload.Click += (sender, EventArgs) => { 
+                            buttonDownload_Click(sender, EventArgs, Row.Cells["DownloadLink"]); 
+                        };
                         form.Controls.Add(btnDownload);
 
                         //如果預覽圖大於螢幕高度 就增加捲軸
@@ -283,24 +289,12 @@ namespace NyaaRSSreader
                 }
                 else
                 {
-                    if ((MessageBox.Show("尚不支援此圖床，是否直接開啟頁面?", "訊息",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                        MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes))
-                    {
-                        //用瀏覽器開啟網址
-                        ProcessStartInfo sInfo = new ProcessStartInfo(url);
-                        Process.Start(sInfo);
-                    }
+                    //彈出視窗詢問是否直接開啟網頁
+                    ImageNotFindBehavior(url, "na");
                 }
             }catch(Exception ex){
-                if ((MessageBox.Show("發生錯誤，是否直接開啟頁面?", "訊息",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                        MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes))
-                    {
-                        //用瀏覽器開啟網址
-                        ProcessStartInfo sInfo = new ProcessStartInfo(url);
-                        Process.Start(sInfo);
-                    }
+                //彈出視窗詢問是否直接開啟網頁
+                ImageNotFindBehavior(url, "error");
             }
 
         }
@@ -309,9 +303,50 @@ namespace NyaaRSSreader
         void buttonDownload_Click(object sender, EventArgs e, DataGridViewCell CellValue)
         {
             if (CellValue != null)
-                DownloadTorr(CellValue.Value.ToString());
+            {
+                var t = new Thread(() => DownloadTorr(CellValue.Value.ToString()));
+                t.Start();
+            }
             else
                 MessageBox.Show("下載連結為空");
+        }
+
+        /// <summary>
+        /// 當回傳的預覽圖=0時的事件
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="type"></param>
+        public void ImageNotFindBehavior(string url,string type)
+        {
+            int selectedIndex=0;
+            //下拉選單選中的值  0:提醒視窗 1:忽略 2:自動開啟連結
+            cbPopWindowBehavior.InvokeIfRequired(() =>
+            {
+                selectedIndex = cbPopWindowBehavior.SelectedIndex;
+            });
+
+            string msg="";
+            if (type == "error")
+                msg = "發生錯誤，是否直接開啟頁面?";
+            else if (type == "na")
+                msg = "尚不支援此圖床，是否直接開啟頁面?";
+
+            //如果是"忽略" 就無動作
+            if (selectedIndex != 1)
+            {
+                //彈出MessageBox詢問是否直接開啟網頁
+                if (
+                    selectedIndex == 2||
+                    (MessageBox.Show(msg, "訊息", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes))
+                {
+                    //用瀏覽器開啟網址
+                    ProcessStartInfo sInfo = new ProcessStartInfo(url);
+                    Process.Start(sInfo);
+                }
+            }
+
+
         }
         #endregion
 
@@ -346,6 +381,13 @@ namespace NyaaRSSreader
             Properties.Settings.Default.Save();
 
             
+        }
+
+        //查無預覽圖預設事件下拉選單的值改變時
+        private void cbPopWindowBehavior_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.cbNotFindImage = cbPopWindowBehavior.SelectedIndex;
+            Properties.Settings.Default.Save();
         }
 
         //選擇檔案下載路徑按鈕
@@ -484,17 +526,35 @@ namespace NyaaRSSreader
 
 
 
-
-
-
-
-
-
-
-
-
-
     }
 
    
+}
+
+//擴充方法
+public static class Extension
+{
+    /// <summary>
+    /// 非同步委派更新UI
+    /// 使用範例:
+    ///         (控制項名稱)cbPopWindowBehavior.InvokeIfRequired(() =>
+    ///        {
+    ///            selectedIndex = cbPopWindowBehavior.SelectedIndex;
+    ///        });
+    /// </summary>
+    /// <param name="control"></param>
+    /// <param name="action"></param>
+
+    public static void InvokeIfRequired(
+        this Control control, MethodInvoker action)
+    {
+        if (control.InvokeRequired)//在非當前執行緒內 使用委派
+        {
+            control.Invoke(action);
+        }
+        else
+        {
+            action();
+        }
+    }
 }

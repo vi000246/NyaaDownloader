@@ -73,7 +73,9 @@ namespace NyaaRSSreader
                 {
                     string bigImageUrl = FuncGetBigImage(url);
                     //必須是圖片才能加到list
-                    if (Regex.IsMatch(bigImageUrl,@"(?:\w+):\/\/(?<domain>[\w@][\w.:@]+)\/?[\w\.?=%&=\-@/$,]*.jpe?g"))
+                    //下面這種的也不給過
+                    //htip://imgdream.net/viewer.php?file=26132226521392290432.jpg
+                    if (Regex.IsMatch(bigImageUrl,@"(?:\w+):\/\/(?<domain>[\w@][\w.:@]+)\/?[\w\.=%&=\-@/$,]*.jpe?g"))
                         BigImageList.Add(bigImageUrl);
                 }
 

@@ -58,5 +58,17 @@ namespace NyaaRSSreader.Properties {
                 this["cbSortIndex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int cbNotFindImage {
+            get {
+                return ((int)(this["cbNotFindImage"]));
+            }
+            set {
+                this["cbNotFindImage"] = value;
+            }
+        }
     }
 }
