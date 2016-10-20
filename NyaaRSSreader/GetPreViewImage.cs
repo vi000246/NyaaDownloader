@@ -43,7 +43,7 @@ namespace NyaaRSSreader
             List<string> BigImageList = new List<string>();
             List<string> SmallImageList = new List<string>();
 
-            #region 取出html裡全部的圖片網址 
+            #region 取出html裡全部網址 
             Regex ptAllUrl = new Regex(
                 //p.s. ?:是關閉括號的capture功能
             @"(?<url>(?:\w+):\/\/(?<domain>[\w@][\w.:@]+)\/?[\w\.?=%&=\-@/$,]*)"
@@ -152,10 +152,18 @@ namespace NyaaRSSreader
         private static string Url_imgbabes(string url)
         {
             string BigImageUrl=string.Empty;
-            var client = new RestClient(url);
-            var request = new RestRequest("", Method.GET);
-            IRestResponse response = client.Execute(request);
-            string html = response.Content;
+            //需要同意瀏覽18禁連結的cookie 無解
+
+            //如果是連結網址就判斷 縮圖網址就忽略
+            //if (Regex.IsMatch(url, @"^http://\w+.imgbabes.com/[\w/]+[\w\d\W]+.jpg.html$"))
+            //{
+            //    //加上同意18歲瀏覽的parameter
+            //    var client = new RestClient(url);
+            //    var request = new RestRequest("", Method.GET);
+            //    request.AddParameter("denial=", "", ParameterType.Cookie);
+            //    IRestResponse response = client.Execute(request);
+            //    string html = response.Content;
+            //}
 
             return BigImageUrl;
         }
