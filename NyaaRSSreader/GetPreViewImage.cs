@@ -170,13 +170,10 @@ namespace NyaaRSSreader
                 //這是回傳的html
                 string html = response.Content;
 
-                //
                 Regex ptAllUrl = new Regex(
-                    //p.s. ?:是關閉括號的capture功能
                 @"(?<url>http://[\d\w]+.imagebam.com/download/[\w/_-]+[\w\d\w_]+.jpg)"
                 , RegexOptions.Multiline);
-                Match matchUrl = ptAllUrl.Match(html);
-                BigImageUrl = matchUrl.Groups["url"].Value;
+                BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
 
 
             }
@@ -205,13 +202,10 @@ namespace NyaaRSSreader
                 //這是回傳的html
                 string html = response.Content;
 
-                //
                 Regex ptAllUrl = new Regex(
-                //p.s. ?:是關閉括號的capture功能
                 @"(?<url>http://\w+.(imgflare|imgbabes).com/files/([\w-]+/?)+.jpg)"
                 , RegexOptions.Multiline);
-                Match matchUrl = ptAllUrl.Match(html);
-                BigImageUrl = matchUrl.Groups["url"].Value;
+                BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
 
 
             }
@@ -224,6 +218,8 @@ namespace NyaaRSSreader
 
         #endregion
 
+
+        #region 模擬js的slowAes加密
         //模擬imgbabes前端的ToNumber方法
         public static List<int> ToNumber(string input) {
             List<int> result=new List<int>();
@@ -283,6 +279,7 @@ namespace NyaaRSSreader
 
             return result;
         }
+        #endregion
 
 
 
