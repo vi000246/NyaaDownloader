@@ -61,9 +61,33 @@ namespace UnitTest
         }
 
         [TestMethod]
+        //判斷imagebam能不能傳回大圖
+        public void Testimagebam()
+        {
+            //輸入小圖的網址 
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://www.imagebam.com/image/9ad016275355093");
+            Assert.IsTrue(urlList.Count > 0);
+            foreach (var url in urlList)
+            {
+                Assert.IsTrue(Regex.IsMatch(url, @"http://[\d\w]+.imagebam.com/download/[\w/_-]+[\w\d\w_]+.jpg", RegexOptions.Singleline));
+            }
+        }
+
+
+        [TestMethod]
         //測試抓不到預覽圖時的事件 1.彈出提示訊息 2.不顯示訊息 3.直接在瀏覽器開啟
         public void TestImageNotFindWindow() {
             new Nyaa抓檔神器().ImageNotFindBehavior("http://www.google.com.tw/","na");
+        }
+
+        [TestMethod]
+        //測試C#能不能解密AES
+        public void TestAesDecrypt() {
+            string input = "";
+            string key = "";
+            string iv = "";
+            string result = GetPreViewImage.Decrypt("5dbd6ed07e2b5ec7584f3f9426fd159c", "443e6d0c0095e4facee39bbdab84a5b6", "cfd9f6f21b5731a30417d9680432cfba");
+            Assert.IsNotNull(result);
         }
 
 

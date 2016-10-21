@@ -160,6 +160,7 @@ namespace NyaaRSSreader
                            // {
                             //ImagePopup(row.Cells["articleLink"].Value.ToString(), row);
                             var t = new Thread(() => ImagePopup(row.Cells["articleLink"].Value.ToString(), row));
+                            t.IsBackground = true;
                               t.Start();
                             
                             //}
@@ -179,6 +180,7 @@ namespace NyaaRSSreader
                         if (row.Cells["DownloadLink"] != null)
                         {
                             var t = new Thread(() => DownloadTorr(row.Cells["DownloadLink"].Value.ToString()));
+                            t.IsBackground = true;
                             t.Start();
                         }
                         else
@@ -321,6 +323,7 @@ namespace NyaaRSSreader
             if (CellValue != null)
             {
                 var t = new Thread(() => DownloadTorr(CellValue.Value.ToString()));
+                t.IsBackground = true;
                 t.Start();
             }
             else
@@ -336,6 +339,7 @@ namespace NyaaRSSreader
                 if (CellValue != null)
                 {
                     var t = new Thread(() => DownloadTorr(CellValue.Value.ToString()));
+                    t.IsBackground = true;
                     t.Start();
                 }
                 else

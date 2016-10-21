@@ -1,7 +1,10 @@
 ﻿using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -115,7 +118,9 @@ namespace NyaaRSSreader
             {"1dl.biz",Url_biz},
             //imgbabes  and imgflare
             {"imgbabes",Url_ImgbabesAndImgflare},
-            {"imgflare",Url_ImgbabesAndImgflare}
+            {"imgflare",Url_ImgbabesAndImgflare},
+            //imagebam
+            {"imagebam",Url_imagebam}
         };
 
         //移除_thumb
@@ -147,6 +152,36 @@ namespace NyaaRSSreader
         private static string Url_biz(string url)
         {
             return url.Replace(".php?", "/") + ".jpg";
+        }
+
+        //imagebam專用
+        private static string Url_imagebam(string url)
+        {
+            string BigImageUrl = string.Empty;
+            //需要同意瀏覽18禁連結的cookie 無解
+
+            //如果是連結網址就進行request 縮圖網址就忽略
+            if (Regex.IsMatch(url, @"^http://\w+.imagebam.com/[\w/]+[\w\d]+$"))
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest("", Method.GET);
+                request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
+                IRestResponse response = client.Execute(request);
+                //這是回傳的html
+                string html = response.Content;
+
+                //
+                Regex ptAllUrl = new Regex(
+                    //p.s. ?:是關閉括號的capture功能
+                @"(?<url>http://[\d\w]+.imagebam.com/download/[\w/_-]+[\w\d\w_]+.jpg)"
+                , RegexOptions.Multiline);
+                Match matchUrl = ptAllUrl.Match(html);
+                BigImageUrl = matchUrl.Groups["url"].Value;
+
+
+            }
+
+            return BigImageUrl;
         }
 
         //imgbabes和imgflare專用
@@ -188,6 +223,67 @@ namespace NyaaRSSreader
 
 
         #endregion
+
+        //模擬imgbabes前端的ToNumber方法
+        public static List<int> ToNumber(string input) {
+            List<int> result=new List<int>();
+            foreach (Match match in Regex.Matches(input, @"(\w{2})"))
+            {
+                result.Add(Convert.ToInt32(match.Groups[0].Value, 16));
+            }
+            return result;
+        }
+
+        public static string Decrypt(string toDecrypt, string key, string iv)
+        {
+            byte[] keyArray = UTF8Encoding.UTF8.GetBytes(key);
+            byte[] ivArray = UTF8Encoding.UTF8.GetBytes(iv);
+            byte[] toEncryptArray = Convert.FromBase64String(toDecrypt);
+            RijndaelManaged rDel = new RijndaelManaged();
+            rDel.Key = keyArray;
+            rDel.IV = ivArray;
+            rDel.Mode = CipherMode.CBC;
+            rDel.Padding = PaddingMode.Zeros;
+            ICryptoTransform cTransform = rDel.CreateDecryptor();
+            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+            return UTF8Encoding.UTF8.GetString(resultArray);
+        }
+
+
+        private static String EncryptIt(String s, List<int> key, List<int> IV)
+        {
+            String result=string.Empty;
+
+            //byte[] byteKey = key.SelectMany(
+            //    x => System.Net.Mime.MediaTypeNames.Text..ASCII.GetBytes(x))
+            //    .ToArray();
+
+
+	
+
+            //RijndaelManaged rijn = new RijndaelManaged();
+            //rijn.Mode = CipherMode.ECB;
+            //rijn.Padding = PaddingMode.Zeros;
+
+            //using (MemoryStream msEncrypt = new MemoryStream())
+            //{
+            //    using (ICryptoTransform encryptor = rijn.CreateEncryptor(byteKey, byteIV))
+            //    {
+            //        using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+            //        {
+            //            using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+            //            {
+            //                swEncrypt.Write(s);
+            //            }
+            //        }
+            //    }
+            //    result = Convert.ToBase64String(msEncrypt.ToArray());
+            //}
+            //rijn.Clear();
+
+            return result;
+        }
+
 
 
 
