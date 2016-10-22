@@ -35,7 +35,7 @@ namespace NyaaRSSreader
                 textPath.Text = Properties.Settings.Default.Path;
 
             //產生第一頁的資料
-            XmlStringToDataTable(cbRssCate.SelectedValue.ToString());
+            XmlStringToDataTable(BuildRssUrl());
             //顯示目前頁數
             textPage.Text = OffsetIndex.ToString();
             //頁數textBox的文字置中
@@ -297,7 +297,7 @@ namespace NyaaRSSreader
                         form.KeyDown += (sender, e) => this.PopFormHotKey(sender, e, form, Row.Cells["DownloadLink"]);
 
                         //如果預覽圖大於螢幕高度 就增加捲軸
-                        if (TotalHeight >= Screen.PrimaryScreen.Bounds.Height)
+                        if (TotalHeight >= (Screen.PrimaryScreen.Bounds.Height-50))
                             form.AutoScroll = true;
                         //表單透明度 記得拿掉
                         form.Opacity = FormSetting.FormOpaticy;
@@ -392,12 +392,12 @@ namespace NyaaRSSreader
         }
         #endregion
 
-        #region 檔案下載路徑鈕、改變下拉選單、上一頁、下一頁、改變頁數
+        #region 檔案下載路徑鈕、改變下拉選單、上一頁、下一頁、改變頁數、刷新按鈕
 
         //當下拉選單發生選取事件時
         private void cbRssCate_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            string url = cbRssCate.SelectedValue.ToString();
+            string url = BuildRssUrl();
             if (!string.IsNullOrEmpty(url))
             {
                 //清空dataGridView的資料
@@ -465,7 +465,7 @@ namespace NyaaRSSreader
         public void PageButtonClickEvent(string type,int jumpPage=0) 
         {
             string offset=string.Empty;
-            string url = cbRssCate.SelectedValue.ToString();
+            string url = BuildRssUrl();
             //判斷要增加頁數還是減頁數還是跳頁
             if(type=="Prev")
                  offset = "&offset=" + --OffsetIndex;
@@ -507,8 +507,16 @@ namespace NyaaRSSreader
                 }
             }
         }
+
+        //刷新按鈕
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            //清空dataGridView的資料
+            this.dataGridView1.Rows.Clear();
+            XmlStringToDataTable(BuildRssUrl());
+        }
         #endregion
-        #region 判斷上一頁、下一頁按鈕可否使用
+        #region 判斷上一頁、下一頁按鈕可否使用  | textBox只可輸入數字
         //判斷上一頁、下一頁按鈕可否使用
         public void ButtonEnable() {
             if (OffsetIndex == 1)
@@ -526,6 +534,12 @@ namespace NyaaRSSreader
                 btnPrev.Enabled = true;
                 btnNext.Enabled = true;
             }
+        }
+        private void TxtBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            //如果不是數字且不是backspace 就禁止輸入
+            if (!Char.IsDigit(e.KeyChar)&& e.KeyChar != (char)8)
+                e.Handled = true;
         }
         #endregion
         #region 檔案大小的排序事件
@@ -565,6 +579,36 @@ namespace NyaaRSSreader
             return result;
         }
         #endregion
+
+        #region 組成網址搜尋條件 回傳網址
+        private string BuildRssUrl() {
+            string url = string.Empty;
+            url = cbRssCate.SelectedValue.ToString();
+            //標題搜尋
+            if (!string.IsNullOrEmpty(textKeyWord.Text))
+                url += "&term=" + textKeyWord.Text;
+            //排序搜尋
+            if (cbRssSort.SelectedIndex != -1)
+                url += "&sort="+(cbRssSort.SelectedIndex+1);
+            //日期B搜尋
+            if (!string.IsNullOrEmpty(textDate_B.Text))
+                url += "&minage=" + textDate_B.Text;
+            //日期E搜尋
+            if (!string.IsNullOrEmpty(textDate_E.Text))
+                url += "&maxage=" + textDate_E.Text;
+            //檔案大小B搜尋
+            if (!string.IsNullOrEmpty(textLarge_B.Text))
+                url += "&minsize=" + textLarge_B.Text;
+            //檔案大小E搜尋
+            if (!string.IsNullOrEmpty(textLarge_E.Text))
+                url += "&maxsize=" + textLarge_E.Text;
+
+            return url;
+        }
+        #endregion
+
+
+
 
 
 

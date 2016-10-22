@@ -50,6 +50,21 @@
             this.btnView = new System.Windows.Forms.DataGridViewButtonColumn();
             this.btnDownload = new System.Windows.Forms.DataGridViewButtonColumn();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnRefresh = new System.Windows.Forms.Button();
+            this.textLarge_E = new System.Windows.Forms.TextBox();
+            this.textDate_E = new System.Windows.Forms.TextBox();
+            this.textLarge_B = new System.Windows.Forms.TextBox();
+            this.textDate_B = new System.Windows.Forms.TextBox();
+            this.textKeyWord = new System.Windows.Forms.TextBox();
+            this.labelKeyWord = new System.Windows.Forms.Label();
+            this.cbRssSort = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.labelRssSort = new System.Windows.Forms.Label();
             this.labelPopupCombo = new System.Windows.Forms.Label();
             this.cbPopWindowBehavior = new System.Windows.Forms.ComboBox();
             this.labelSort = new System.Windows.Forms.Label();
@@ -252,6 +267,21 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.btnRefresh);
+            this.panel1.Controls.Add(this.textLarge_E);
+            this.panel1.Controls.Add(this.textDate_E);
+            this.panel1.Controls.Add(this.textLarge_B);
+            this.panel1.Controls.Add(this.textDate_B);
+            this.panel1.Controls.Add(this.textKeyWord);
+            this.panel1.Controls.Add(this.labelKeyWord);
+            this.panel1.Controls.Add(this.cbRssSort);
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.label6);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.labelRssSort);
             this.panel1.Controls.Add(this.labelPopupCombo);
             this.panel1.Controls.Add(this.cbPopWindowBehavior);
             this.panel1.Controls.Add(this.labelSort);
@@ -263,8 +293,147 @@
             this.panel1.Controls.Add(this.lbRssCate);
             this.panel1.Location = new System.Drawing.Point(14, -3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(837, 100);
+            this.panel1.Size = new System.Drawing.Size(949, 100);
             this.panel1.TabIndex = 6;
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.Location = new System.Drawing.Point(831, 34);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(97, 52);
+            this.btnRefresh.TabIndex = 14;
+            this.btnRefresh.Text = "刷新";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
+            // textLarge_E
+            // 
+            this.textLarge_E.Location = new System.Drawing.Point(698, 37);
+            this.textLarge_E.Name = "textLarge_E";
+            this.textLarge_E.Size = new System.Drawing.Size(30, 22);
+            this.textLarge_E.TabIndex = 13;
+            this.textLarge_E.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtBox_KeyPress);
+            // 
+            // textDate_E
+            // 
+            this.textDate_E.Location = new System.Drawing.Point(698, 65);
+            this.textDate_E.Name = "textDate_E";
+            this.textDate_E.Size = new System.Drawing.Size(30, 22);
+            this.textDate_E.TabIndex = 13;
+            this.textDate_E.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtBox_KeyPress);
+            // 
+            // textLarge_B
+            // 
+            this.textLarge_B.Location = new System.Drawing.Point(645, 36);
+            this.textLarge_B.Name = "textLarge_B";
+            this.textLarge_B.Size = new System.Drawing.Size(30, 22);
+            this.textLarge_B.TabIndex = 13;
+            this.textLarge_B.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtBox_KeyPress);
+            // 
+            // textDate_B
+            // 
+            this.textDate_B.Location = new System.Drawing.Point(645, 65);
+            this.textDate_B.Name = "textDate_B";
+            this.textDate_B.Size = new System.Drawing.Size(30, 22);
+            this.textDate_B.TabIndex = 13;
+            this.textDate_B.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtBox_KeyPress);
+            // 
+            // textKeyWord
+            // 
+            this.textKeyWord.Location = new System.Drawing.Point(159, 29);
+            this.textKeyWord.Name = "textKeyWord";
+            this.textKeyWord.Size = new System.Drawing.Size(112, 22);
+            this.textKeyWord.TabIndex = 12;
+            // 
+            // labelKeyWord
+            // 
+            this.labelKeyWord.AutoSize = true;
+            this.labelKeyWord.Location = new System.Drawing.Point(157, 11);
+            this.labelKeyWord.Name = "labelKeyWord";
+            this.labelKeyWord.Size = new System.Drawing.Size(53, 12);
+            this.labelKeyWord.TabIndex = 11;
+            this.labelKeyWord.Text = "標題名稱";
+            // 
+            // cbRssSort
+            // 
+            this.cbRssSort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbRssSort.FormattingEnabled = true;
+            this.cbRssSort.Items.AddRange(new object[] {
+            "日期",
+            "Seeders",
+            "Leechers",
+            "下載數",
+            "檔案大小",
+            "名稱",
+            "升序",
+            "降序"});
+            this.cbRssSort.Location = new System.Drawing.Point(298, 28);
+            this.cbRssSort.Name = "cbRssSort";
+            this.cbRssSort.Size = new System.Drawing.Size(121, 20);
+            this.cbRssSort.TabIndex = 10;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(681, 39);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(11, 12);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "~";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(681, 68);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(11, 12);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "~";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(734, 40);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(52, 12);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "MB large.";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(734, 68);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(47, 12);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "days old.";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(594, 39);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(45, 12);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Between";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(594, 68);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(45, 12);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Between";
+            // 
+            // labelRssSort
+            // 
+            this.labelRssSort.AutoSize = true;
+            this.labelRssSort.Location = new System.Drawing.Point(298, 11);
+            this.labelRssSort.Name = "labelRssSort";
+            this.labelRssSort.Size = new System.Drawing.Size(29, 12);
+            this.labelRssSort.TabIndex = 9;
+            this.labelRssSort.Text = "排序";
             // 
             // labelPopupCombo
             // 
@@ -398,6 +567,21 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn download;
         private System.Windows.Forms.DataGridViewButtonColumn btnView;
         private System.Windows.Forms.DataGridViewButtonColumn btnDownload;
+        private System.Windows.Forms.TextBox textKeyWord;
+        private System.Windows.Forms.Label labelKeyWord;
+        private System.Windows.Forms.ComboBox cbRssSort;
+        private System.Windows.Forms.Label labelRssSort;
+        private System.Windows.Forms.TextBox textDate_E;
+        private System.Windows.Forms.TextBox textDate_B;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox textLarge_B;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox textLarge_E;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button btnRefresh;
     }
 }
 
