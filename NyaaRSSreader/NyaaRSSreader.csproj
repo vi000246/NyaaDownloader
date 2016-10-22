@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Ampeross-Ampola-Downloads.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="jint">
       <HintPath>..\packages\jint.2.10.2\lib\net45\jint.dll</HintPath>
@@ -92,6 +95,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Ampeross-Ampola-Downloads.ico" />
     <Content Include="ILMergeOrder.txt" />
   </ItemGroup>
   <ItemGroup />
