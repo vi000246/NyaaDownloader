@@ -1,5 +1,4 @@
 C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\NyaaRSSreader\bin\Debug\NyaaRSSreader.exe.config
-C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\NyaaRSSreader\obj\Debug\NyaaRSSreader.csprojResolveAssemblyReference.cache
 C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\NyaaRSSreader\obj\Debug\NyaaRSSreader.Nyaa抓檔神器.resources
 C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\NyaaRSSreader\obj\Debug\NyaaRSSreader.Properties.Resources.resources
 C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\NyaaRSSreader\obj\Debug\NyaaRSSreader.csproj.GenerateResource.Cache

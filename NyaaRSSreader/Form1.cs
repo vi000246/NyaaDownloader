@@ -126,7 +126,8 @@ namespace NyaaRSSreader
         //排序DataGridView
         public void SortDataGrid() {
             //依據下拉選單的值 自動排序
-            this.dataGridView1.Sort(this.dataGridView1.Columns[cbSort.SelectedValue.ToString()], ListSortDirection.Descending);
+            if (cbSort.SelectedValue.ToString()!="無") ;
+                this.dataGridView1.Sort(this.dataGridView1.Columns[cbSort.SelectedValue.ToString()], ListSortDirection.Descending);
 
         }
 
