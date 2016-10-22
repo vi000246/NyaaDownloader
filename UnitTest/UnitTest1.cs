@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NyaaRSSreader;
 using System.Text.RegularExpressions;
+using Jint;
 
 
 namespace UnitTest
@@ -49,7 +50,7 @@ namespace UnitTest
 
         [TestMethod]
         //判斷imgbabes和imgflare能不能傳回大圖
-        public void TestimgbabesAndImgFlare()
+        public void TestImgbabesAndImgFlare()
         {
             //輸入小圖的網址 
             var urlList = new GetPreViewImage().GetBigImageUrl("http://www.imgbabes.com/r4dq19sff9dp/thumbs20140317153605.jpg.html  http://www.imgflare.com/lg4ssabtlplz/1fset00466jp-2.jpg.html");
@@ -80,14 +81,16 @@ namespace UnitTest
             new Nyaa抓檔神器().ImageNotFindBehavior("http://www.google.com.tw/","na");
         }
 
+
         [TestMethod]
-        //測試C#能不能解密AES
-        public void TestAesDecrypt() {
-            string input = "";
-            string key = "";
-            string iv = "";
-            string result = GetPreViewImage.Decrypt("5dbd6ed07e2b5ec7584f3f9426fd159c", "443e6d0c0095e4facee39bbdab84a5b6", "cfd9f6f21b5731a30417d9680432cfba");
-            Assert.IsNotNull(result);
+        public void TestJint() {
+            //Engine jint;
+            //jint = new Engine();
+            //jint.Execute(JShelper.Script);
+            //var a = jint.Invoke("GetCookie", "2c74fc8f6cbd3aac4dbd79d854eee1b0",
+            //    "5907dbd743bae6749df54fc54f81e447",
+            //    "7d74f260ffbe6844f2c77cba7446350c");
+            //Assert.IsNotNull(a);
         }
 
 

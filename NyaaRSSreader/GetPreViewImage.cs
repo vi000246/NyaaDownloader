@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Jint;
 
 namespace NyaaRSSreader
 {
@@ -190,22 +191,43 @@ namespace NyaaRSSreader
             //如果是連結網址就進行request 縮圖網址就忽略
             if (Regex.IsMatch(url, @"^http://\w+.(imgflare|imgbabes).com/[\w/]+[\w\d\W]+.jpg.html$"))
             {
+                //============step1 先取得網頁頁面
                 var client = new RestClient(url);
                 var request = new RestRequest("", Method.GET);
                 request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
-                //p.s. 加上同意18禁連結的cookie  這cookie是我手動複製來的 好像是動態組出來 反正過了 沒差
-                //這是imgbabes的cookie
-                request.AddParameter("denial", "5894338b2ea172a823bf2d53ecc742f3", ParameterType.Cookie);
-                //這是imgflare的cookie
-                request.AddParameter("verifid", "02dd0cf244e2d07821b2d0e69e7abc7d", ParameterType.Cookie);
+               
                 IRestResponse response = client.Execute(request);
                 //這是回傳的html
                 string html = response.Content;
 
+                //=============step2 取得html裡 slowAES的tonumber的三個key 並呼叫Jint還原為cookie的字串
+
+                Regex matchAES = new Regex(
+@"a=toNumbers\(""(?<input>\w+)""\).*b=toNumbers\(""(?<key>\w+)""\).*c=toNumbers\(""(?<iv>\w+)""\)"
+, RegexOptions.Multiline);
+                string input = matchAES.Match(html).Groups["input"].Value;
+                string key = matchAES.Match(html).Groups["key"].Value;
+                string iv = matchAES.Match(html).Groups["iv"].Value;
+
+                Engine jint = new Engine();
+                jint.Execute(JShelper.Script);
+                string cookie = jint.Invoke("GetCookie", input,key,iv).ToString();
+
+                //============step3 加上cookie
+                //p.s. 加上同意18禁連結的cookie  這cookie是我手動複製來的 好像是動態組出來 反正過了 沒差
+                //這是imgbabes的cookie
+                request.AddParameter("denial", cookie, ParameterType.Cookie);
+                //這是imgflare的cookie
+                request.AddParameter("verifid", cookie, ParameterType.Cookie);
+
+                IRestResponse response2 = client.Execute(request);
+                //這是擁有大圖的html
+                string html2 = response2.Content;
+
                 Regex ptAllUrl = new Regex(
                 @"(?<url>http://\w+.(imgflare|imgbabes).com/files/([\w-]+/?)+.jpg)"
                 , RegexOptions.Multiline);
-                BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
+                BigImageUrl = ptAllUrl.Match(html2).Groups["url"].Value;
 
 
             }
@@ -216,69 +238,6 @@ namespace NyaaRSSreader
 
 
 
-        #endregion
-
-
-        #region 模擬js的slowAes加密
-        //模擬imgbabes前端的ToNumber方法
-        public static List<int> ToNumber(string input) {
-            List<int> result=new List<int>();
-            foreach (Match match in Regex.Matches(input, @"(\w{2})"))
-            {
-                result.Add(Convert.ToInt32(match.Groups[0].Value, 16));
-            }
-            return result;
-        }
-
-        public static string Decrypt(string toDecrypt, string key, string iv)
-        {
-            byte[] keyArray = UTF8Encoding.UTF8.GetBytes(key);
-            byte[] ivArray = UTF8Encoding.UTF8.GetBytes(iv);
-            byte[] toEncryptArray = Convert.FromBase64String(toDecrypt);
-            RijndaelManaged rDel = new RijndaelManaged();
-            rDel.Key = keyArray;
-            rDel.IV = ivArray;
-            rDel.Mode = CipherMode.CBC;
-            rDel.Padding = PaddingMode.Zeros;
-            ICryptoTransform cTransform = rDel.CreateDecryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-            return UTF8Encoding.UTF8.GetString(resultArray);
-        }
-
-
-        private static String EncryptIt(String s, List<int> key, List<int> IV)
-        {
-            String result=string.Empty;
-
-            //byte[] byteKey = key.SelectMany(
-            //    x => System.Net.Mime.MediaTypeNames.Text..ASCII.GetBytes(x))
-            //    .ToArray();
-
-
-	
-
-            //RijndaelManaged rijn = new RijndaelManaged();
-            //rijn.Mode = CipherMode.ECB;
-            //rijn.Padding = PaddingMode.Zeros;
-
-            //using (MemoryStream msEncrypt = new MemoryStream())
-            //{
-            //    using (ICryptoTransform encryptor = rijn.CreateEncryptor(byteKey, byteIV))
-            //    {
-            //        using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-            //        {
-            //            using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-            //            {
-            //                swEncrypt.Write(s);
-            //            }
-            //        }
-            //    }
-            //    result = Convert.ToBase64String(msEncrypt.ToArray());
-            //}
-            //rijn.Clear();
-
-            return result;
-        }
         #endregion
 
 
