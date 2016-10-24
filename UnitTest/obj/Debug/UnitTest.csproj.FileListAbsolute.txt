@@ -1,7 +1,7 @@
-C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\UnitTest\bin\Debug\NyaaRSSreader.exe
-C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\UnitTest\bin\Debug\UnitTest.dll
-C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\UnitTest\bin\Debug\UnitTest.pdb
-C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\UnitTest\bin\Debug\NyaaRSSreader.pdb
-C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\UnitTest\obj\Debug\UnitTest.csprojResolveAssemblyReference.cache
-C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\UnitTest\obj\Debug\UnitTest.dll
-C:\Users\Administrator\Documents\Visual Studio 2013\Projects\NyaaRSSreader\UnitTest\obj\Debug\UnitTest.pdb
+C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\UnitTest\bin\Debug\UnitTest.dll
+C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\UnitTest\bin\Debug\UnitTest.pdb
+C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\UnitTest\bin\Debug\NyaaRSSreader.exe
+C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\UnitTest\bin\Debug\NyaaRSSreader.pdb
+C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\UnitTest\obj\Debug\UnitTest.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\UnitTest\obj\Debug\UnitTest.dll
+C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\UnitTest\obj\Debug\UnitTest.pdb

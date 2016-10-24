@@ -11,6 +11,19 @@ namespace UnitTest
     public class UnitTest1
     {
         [TestMethod]
+        //判斷能不能回傳大圖
+        public void TestBigimage()
+        {
+            //輸入小圖的網址 
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://jav-hentai.host/i/upload/small/2016/10/21/580a1752537c8.jpeg");
+            Assert.IsTrue(urlList.Count > 0);
+            //foreach (var url in urlList)
+            //{
+            //    Assert.IsTrue(Regex.IsMatch(url, @"(?<url>https?://1dl.biz(?:[\d\w-_./\?]*)[\d\w-_.]*.jpe?g)", RegexOptions.Singleline));
+            //}
+        }
+
+        [TestMethod]
         //判斷能不能回傳1dl.biz的大圖
         public void TestBizLink()
         {
@@ -53,7 +66,7 @@ namespace UnitTest
         public void TestImgbabesAndImgFlare()
         {
             //輸入小圖的網址 
-            var urlList = new GetPreViewImage().GetBigImageUrl("http://www.imgbabes.com/r4dq19sff9dp/thumbs20140317153605.jpg.html  http://www.imgflare.com/lg4ssabtlplz/1fset00466jp-2.jpg.html");
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://www.imgbabes.com/b4y95hmejbou/102216_01-10mu-1080p.jpeg.html");
             Assert.IsTrue(urlList.Count > 0);
             foreach (var url in urlList)
             {

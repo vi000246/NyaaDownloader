@@ -153,18 +153,9 @@ namespace NyaaRSSreader
                     {
                         if (row.Cells["articleLink"].Value != null)
                         {
-                            //只有RealLife類別才能用預覽圖
-                            //if (!cbRssCate.Text.Contains("RealLife"))
-                            //    MessageBox.Show("此類別尚不支援預覽圖功能");
-                            //else
-                                //彈出預覽圖視窗
-                           // {
-                            //ImagePopup(row.Cells["articleLink"].Value.ToString(), row);
-                            var t = new Thread(() => ImagePopup(row.Cells["articleLink"].Value.ToString(), row));
-                            t.IsBackground = true;
-                              t.Start();
-                            
-                            //}
+                                var t = new Thread(() => ImagePopup(row.Cells["articleLink"].Value.ToString(), row));
+                                t.IsBackground = true;
+                                t.Start();
                         }
                         else
                         {
@@ -234,76 +225,79 @@ namespace NyaaRSSreader
                 //如果有解析到圖片
                 if (imageFileList.Count > 0)
                 {
-                    using (Form form = new Form())
+                    if (FormSetting.IsEnablePopup)
                     {
-
-                        form.StartPosition = FormStartPosition.CenterScreen;
-                        //popup視窗標題
-                        string Size = Row.Cells["Size"] == null ? "" : Row.Cells["Size"].Value.ToString();
-                        string Title = Row.Cells["Title"] == null ? "" : Row.Cells["Title"].Value.ToString();
-                        form.Text = "預覽圖 [" + Size + "] " + Title;
-
-                        //因為已經有按鈕了 所以從按鈕高度開始插入picturebox
-                        int TotalHeight = FormSetting.PopupWindow.btnDownloadHeight;
-                        int MaxWidth = 0;
-                        //依據imageList的個數 產生出數個picturebox
-                        foreach (var imageFile in imageFileList)
+                        using (Form form = new Form())
                         {
-                            PictureBox eachPictureBox = new PictureBox();
-                            form.Controls.Add(eachPictureBox);
-                            eachPictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
-                            //將圖片下移總高度
-                            eachPictureBox.Top = TotalHeight;
-                            //載入圖片
-                            eachPictureBox.Load(imageFile);
-                            //如果總高度小於螢幕高度 將總高度加上此圖片的高度
-                            if (TotalHeight + eachPictureBox.Size.Height < Screen.PrimaryScreen.Bounds.Height)
-                                TotalHeight += eachPictureBox.Size.Height;
-                            else
-                                TotalHeight = Screen.PrimaryScreen.Bounds.Height-50;
-                            //取得最大圖片的寬度
-                            if (eachPictureBox.Size.Width > MaxWidth)
-                                MaxWidth = eachPictureBox.Size.Width;
-                        }
-                        //改變form的大小 如果小於setting裡的最小寬度 就設為最小寬度
-                        form.Size = new Size(MaxWidth < FormSetting.PopupWindow.popWindowMinWidth ? 
-                            FormSetting.PopupWindow.popWindowMinWidth : MaxWidth, TotalHeight);
 
-                        //增加下載連結按鈕
-                        Button btnDownload = new Button();
-                        btnDownload.Width = FormSetting.PopupWindow.btnDownloadWidth;
-                        btnDownload.Height = FormSetting.PopupWindow.btnDownloadHeight;
-                        btnDownload.ForeColor = Color.Black;
-                        btnDownload.Text = "下載";
-                        //讓button置於最上面的中間
-                        btnDownload.Left = (form.ClientSize.Width - btnDownload.Width) / 2;
-                        form.Controls.Add(btnDownload);
+                            form.StartPosition = FormStartPosition.CenterScreen;
+                            //popup視窗標題
+                            string Size = Row.Cells["Size"] == null ? "" : Row.Cells["Size"].Value.ToString();
+                            string Title = Row.Cells["Title"] == null ? "" : Row.Cells["Title"].Value.ToString();
+                            form.Text = "預覽圖 [" + Size + "] " + Title;
 
-                        //增加熱鍵說明的label
-                        Label info = new Label();
-                        info.TextAlign = ContentAlignment.TopLeft;
-                        //C#顏色表 http://www.flounder.com/csharp_color_table.htm
-                        info.BackColor = Color.SkyBlue;
-                        info.Font = new Font("Arial", 10, FontStyle.Bold);
-                        string text = "熱鍵："+ Environment.NewLine + "(D):下載種子 (C):關閉視窗 (A):下載種子並關閉視窗";
-                        info.Text = text;
-                        info.AutoSize = true;
-                        form.Controls.Add(info);
+                            //因為已經有按鈕了 所以從按鈕高度開始插入picturebox
+                            int TotalHeight = FormSetting.PopupWindow.btnDownloadHeight;
+                            int MaxWidth = 0;
+                            //依據imageList的個數 產生出數個picturebox
+                            foreach (var imageFile in imageFileList)
+                            {
+                                PictureBox eachPictureBox = new PictureBox();
+                                form.Controls.Add(eachPictureBox);
+                                eachPictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
+                                //將圖片下移總高度
+                                eachPictureBox.Top = TotalHeight;
+                                //載入圖片
+                                eachPictureBox.Load(imageFile);
+                                //如果總高度小於螢幕高度 將總高度加上此圖片的高度
+                                if (TotalHeight + eachPictureBox.Size.Height < Screen.PrimaryScreen.Bounds.Height)
+                                    TotalHeight += eachPictureBox.Size.Height;
+                                else
+                                    TotalHeight = Screen.PrimaryScreen.Bounds.Height - 50;
+                                //取得最大圖片的寬度
+                                if (eachPictureBox.Size.Width > MaxWidth)
+                                    MaxWidth = eachPictureBox.Size.Width;
+                            }
+                            //改變form的大小 如果小於setting裡的最小寬度 就設為最小寬度
+                            form.Size = new Size(MaxWidth < FormSetting.PopupWindow.popWindowMinWidth ?
+                                FormSetting.PopupWindow.popWindowMinWidth : MaxWidth, TotalHeight);
 
-                        //綁定下載按鈕點擊事件
-                        btnDownload.Click += (sender, EventArgs) => buttonDownload_Click(sender, EventArgs, Row.Cells["DownloadLink"]);
-                        //啟用form的點擊事件
-                        form.KeyPreview = true;
-                        //綁定form的熱鍵
-                        form.KeyDown += (sender, e) => this.PopFormHotKey(sender, e, form, Row.Cells["DownloadLink"]);
+                            //增加下載連結按鈕
+                            Button btnDownload = new Button();
+                            btnDownload.Width = FormSetting.PopupWindow.btnDownloadWidth;
+                            btnDownload.Height = FormSetting.PopupWindow.btnDownloadHeight;
+                            btnDownload.ForeColor = Color.Black;
+                            btnDownload.Text = "下載";
+                            //讓button置於最上面的中間
+                            btnDownload.Left = (form.ClientSize.Width - btnDownload.Width) / 2;
+                            form.Controls.Add(btnDownload);
 
-                        //如果預覽圖大於螢幕高度 就增加捲軸
-                        if (TotalHeight >= (Screen.PrimaryScreen.Bounds.Height-50))
-                            form.AutoScroll = true;
-                        //表單透明度 記得拿掉
-                        form.Opacity = FormSetting.FormOpaticy;
-                        form.ShowDialog();
-                    }
+                            //增加熱鍵說明的label
+                            Label info = new Label();
+                            info.TextAlign = ContentAlignment.TopLeft;
+                            //C#顏色表 http://www.flounder.com/csharp_color_table.htm
+                            info.BackColor = Color.SkyBlue;
+                            info.Font = new Font("Arial", 10, FontStyle.Bold);
+                            string text = "熱鍵：" + Environment.NewLine + "(D):下載種子 (C):關閉視窗 (A):下載種子並關閉視窗";
+                            info.Text = text;
+                            info.AutoSize = true;
+                            form.Controls.Add(info);
+
+                            //綁定下載按鈕點擊事件
+                            btnDownload.Click += (sender, EventArgs) => buttonDownload_Click(sender, EventArgs, Row.Cells["DownloadLink"]);
+                            //啟用form的點擊事件
+                            form.KeyPreview = true;
+                            //綁定form的熱鍵
+                            form.KeyDown += (sender, e) => this.PopFormHotKey(sender, e, form, Row.Cells["DownloadLink"]);
+
+                            //如果預覽圖大於螢幕高度 就增加捲軸
+                            if (TotalHeight >= (Screen.PrimaryScreen.Bounds.Height - 50))
+                                form.AutoScroll = true;
+                            //表單透明度 記得拿掉
+                            form.Opacity = FormSetting.FormOpaticy;
+                            form.ShowDialog();
+                        }//end of using form
+                    }//end of FormSetting.IsEnablePopup
 
                 }
                 else

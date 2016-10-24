@@ -50,7 +50,7 @@ namespace NyaaRSSreader
             #region 取出html裡全部網址 
             Regex ptAllUrl = new Regex(
                 //p.s. ?:是關閉括號的capture功能
-            @"(?<url>(?:\w+):\/\/(?<domain>[\w@][\w.:@]+)\/?[\w\.?=%&=\-@/$,]*)"
+            @"(?<url>(?:\w+):\/\/(?<domain>[\w@][\w.:@-]+)\/?[\w\.?=%&=\-@/$,]*)"
             , RegexOptions.Multiline);
             MatchCollection matchAllUrl = ptAllUrl.Matches(html);
             #endregion
@@ -79,7 +79,9 @@ namespace NyaaRSSreader
                     //必須是圖片才能加到list
                     //下面這種的也不給過
                     //htip://imgdream.net/viewer.php?file=26132226521392290432.jpg
-                    if (Regex.IsMatch(bigImageUrl,@"(?:\w+):\/\/(?<domain>[\w@][\w.:@]+)\/?[\w\.=%&=\-@/$,]*.jpe?g"))
+                    //例外:http://dare.moe/f/4qy   可以直接取得圖片
+                    if (Regex.IsMatch(bigImageUrl,@"(?:\w+):\/\/(?<domain>[\w@][\w.:@]+)\/?[\w\.=%&=\-@/$,]*.jpe?g")
+                        || Regex.IsMatch(bigImageUrl, @"http://dare.moe/f/\w{0,5}"))
                         BigImageList.Add(bigImageUrl);
                 }
 
@@ -113,6 +115,9 @@ namespace NyaaRSSreader
             //直接回傳
             {"pics.dmm",Url_Direct},
             {"tinypic",Url_Direct},
+            {"tokyo-hot",Url_Direct},
+            {"cosjav",Url_Direct},
+            {"dare",Url_Direct},
             //replace特定字串
             {"imgchili",Url_imgchili},
             {"ultraimg",Url_ultraimg},
@@ -187,49 +192,54 @@ namespace NyaaRSSreader
         {
             string BigImageUrl=string.Empty;
             //需要同意瀏覽18禁連結的cookie 無解
-
-            //如果是連結網址就進行request 縮圖網址就忽略
-            if (Regex.IsMatch(url, @"^http://\w+.(imgflare|imgbabes).com/[\w/]+[\w\d\W]+.jpg.html$"))
+            try
             {
-                //============step1 先取得網頁頁面
-                var client = new RestClient(url);
-                var request = new RestRequest("", Method.GET);
-                request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
-               
-                IRestResponse response = client.Execute(request);
-                //這是回傳的html
-                string html = response.Content;
+                //如果是連結網址就進行request 縮圖網址就忽略
+                if (Regex.IsMatch(url, @"^http://\w+.(?:imgflare|imgbabes).com/(?:\w+/)+[\w\d\W]+.jpe?g.html$"))
+                {
+                    //============step1 先取得網頁頁面
+                    var client = new RestClient(url);
+                    var request = new RestRequest("", Method.GET);
+                    request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
 
-                //=============step2 取得html裡 slowAES的tonumber的三個key 並呼叫Jint還原為cookie的字串
+                    IRestResponse response = client.Execute(request);
+                    //這是回傳的html
+                    string html = response.Content;
 
-                Regex matchAES = new Regex(
-@"a=toNumbers\(""(?<input>\w+)""\).*b=toNumbers\(""(?<key>\w+)""\).*c=toNumbers\(""(?<iv>\w+)""\)"
-, RegexOptions.Multiline);
-                string input = matchAES.Match(html).Groups["input"].Value;
-                string key = matchAES.Match(html).Groups["key"].Value;
-                string iv = matchAES.Match(html).Groups["iv"].Value;
+                    //=============step2 取得html裡 slowAES的tonumber的三個key 並呼叫Jint還原為cookie的字串
 
-                Engine jint = new Engine();
-                jint.Execute(JShelper.Script);
-                string cookie = jint.Invoke("GetCookie", input,key,iv).ToString();
+                    Regex matchAES = new Regex(
+    @"a=toNumbers\(""(?<input>\w+)""\).*b=toNumbers\(""(?<key>\w+)""\).*c=toNumbers\(""(?<iv>\w+)""\)"
+    , RegexOptions.Multiline);
+                    string input = matchAES.Match(html).Groups["input"].Value;
+                    string key = matchAES.Match(html).Groups["key"].Value;
+                    string iv = matchAES.Match(html).Groups["iv"].Value;
 
-                //============step3 加上cookie
-                //p.s. 加上同意18禁連結的cookie  這cookie是我手動複製來的 好像是動態組出來 反正過了 沒差
-                //這是imgbabes的cookie
-                request.AddParameter("denial", cookie, ParameterType.Cookie);
-                //這是imgflare的cookie
-                request.AddParameter("verifid", cookie, ParameterType.Cookie);
+                    Engine jint = new Engine();
+                    jint.Execute(JShelper.Script);
+                    string cookie = jint.Invoke("GetCookie", input, key, iv).ToString();
 
-                IRestResponse response2 = client.Execute(request);
-                //這是擁有大圖的html
-                string html2 = response2.Content;
+                    //============step3 加上cookie
+                    //p.s. 加上同意18禁連結的cookie  這cookie是我手動複製來的 好像是動態組出來 反正過了 沒差
+                    //這是imgbabes的cookie
+                    request.AddParameter("denial", cookie, ParameterType.Cookie);
+                    //這是imgflare的cookie
+                    request.AddParameter("verifid", cookie, ParameterType.Cookie);
 
-                Regex ptAllUrl = new Regex(
-                @"(?<url>http://\w+.(imgflare|imgbabes).com/files/([\w-]+/?)+.jpg)"
-                , RegexOptions.Multiline);
-                BigImageUrl = ptAllUrl.Match(html2).Groups["url"].Value;
+                    IRestResponse response2 = client.Execute(request);
+                    //這是擁有大圖的html
+                    string html2 = response2.Content;
+
+                    Regex ptAllUrl = new Regex(
+                    @"(?<url>http://\w+.(imgflare|imgbabes).com/files/(?:[\w-]+/?)+.jpe?g)"
+                    , RegexOptions.Multiline);
+                    BigImageUrl = ptAllUrl.Match(html2).Groups["url"].Value;
 
 
+                }
+            }
+            catch (Exception ex) {
+                throw ex;
             }
 
             return BigImageUrl;
