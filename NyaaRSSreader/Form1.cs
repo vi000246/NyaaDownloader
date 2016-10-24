@@ -42,7 +42,12 @@ namespace NyaaRSSreader
             textPage.TextAlign = HorizontalAlignment.Center;
             //頁數textbox的按下Enter事件
             this.textPage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(CheckEnterKeyPress);
+
+            //用來測試彈出預覽視窗 不要用請註解掉
+            //DataGridViewRow Row = new DataGridViewRow();
+            //ImagePopup("", Row);
         }
+        
         #region 綁定下拉選單的值
         /// <summary>
         /// 下拉選單的值
