@@ -118,6 +118,7 @@ namespace NyaaRSSreader
             {"tokyo-hot",Url_Direct},
             {"cosjav",Url_Direct},
             {"dare",Url_Direct},
+            {"qpic",Url_Direct},
             //replace特定字串
             {"imgchili",Url_imgchili},
             {"ultraimg",Url_ultraimg},

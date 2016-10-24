@@ -12,7 +12,7 @@ namespace NyaaRSSreader
         public static double FormOpaticy = 1;
 
         //是否開啟預覽圖彈出視窗功能
-        public static bool IsEnablePopup = false;
+        public static bool IsEnablePopup = true;
 
         //下拉選單的值 RSS分類
         public static Dictionary<string, string>CatalogueDropDownList = new Dictionary<string, string>()

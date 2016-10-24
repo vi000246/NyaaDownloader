@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -42,10 +43,6 @@ namespace NyaaRSSreader
             textPage.TextAlign = HorizontalAlignment.Center;
             //頁數textbox的按下Enter事件
             this.textPage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(CheckEnterKeyPress);
-
-            //用來測試彈出預覽視窗 不要用請註解掉
-            //DataGridViewRow Row = new DataGridViewRow();
-            //ImagePopup("", Row);
         }
         
         #region 綁定下拉選單的值
@@ -253,7 +250,9 @@ namespace NyaaRSSreader
                                 //將圖片下移總高度
                                 eachPictureBox.Top = TotalHeight;
                                 //載入圖片
-                                eachPictureBox.Load(imageFile);
+                                //eachPictureBox.Load(imageFile);
+                                eachPictureBox.Image = LoadBitmap(imageFile);
+
                                 //如果總高度小於螢幕高度 將總高度加上此圖片的高度
                                 if (TotalHeight + eachPictureBox.Size.Height < Screen.PrimaryScreen.Bounds.Height)
                                     TotalHeight += eachPictureBox.Size.Height;
@@ -607,6 +606,29 @@ namespace NyaaRSSreader
         }
         #endregion
 
+        #region 載入圖片
+        //pictureBox載入圖片用的method
+        private Image LoadBitmap(string imageUrl)
+        {
+            Image image;
+
+            //var request = WebRequest.Create(imageUrl);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(imageUrl);
+            //如果是biz連結 需要加上Referer才能取到圖片
+            if (imageUrl.Contains("biz"))
+            {
+                request.Referer = imageUrl.Replace("i/","i.php?").Replace(".jpg","");
+            }
+
+            using (var response = request.GetResponse())
+            using (var stream = response.GetResponseStream())
+            {
+                image=Bitmap.FromStream(stream);
+            }
+
+            return image;
+        }
+        #endregion
 
 
 
