@@ -127,7 +127,9 @@ namespace NyaaRSSreader
             {"imgbabes",Url_ImgbabesAndImgflare},
             {"imgflare",Url_ImgbabesAndImgflare},
             //imagebam
-            {"imagebam",Url_imagebam}
+            {"imagebam",Url_imagebam},
+            //imgrock
+            {"imgrock",Url_imgrock}
         };
 
         //移除_thumb
@@ -212,9 +214,10 @@ namespace NyaaRSSreader
                     Regex matchAES = new Regex(
     @"a=toNumbers\(""(?<input>\w+)""\).*b=toNumbers\(""(?<key>\w+)""\).*c=toNumbers\(""(?<iv>\w+)""\)"
     , RegexOptions.Multiline);
-                    string input = matchAES.Match(html).Groups["input"].Value;
-                    string key = matchAES.Match(html).Groups["key"].Value;
-                    string iv = matchAES.Match(html).Groups["iv"].Value;
+                    Match matchAesGroup = matchAES.Match(html);
+                    string input = matchAesGroup.Groups["input"].Value;
+                    string key = matchAesGroup.Groups["key"].Value;
+                    string iv = matchAesGroup.Groups["iv"].Value;
 
                     Engine jint = new Engine();
                     jint.Execute(JShelper.Script);
@@ -240,6 +243,82 @@ namespace NyaaRSSreader
                 }
             }
             catch (Exception ex) {
+                throw ex;
+            }
+
+            return BigImageUrl;
+        }
+
+        private static string Url_imgrock(string url) {
+            string BigImageUrl = string.Empty;
+            try
+            {
+                Regex matchUrl = new Regex(
+                @"^http://\w*.?imgrock.net/(?<file_code>\w+)/[\w\d\W]+.jpe?g.html$"
+                , RegexOptions.Multiline);
+                Match matchUrlGroup = matchUrl.Match(url);
+
+                //取得fileCode 用來加在cookie 用在step2的Get request
+                string fileCode = matchUrlGroup.Groups["file_code"].Value;
+
+                //如果是連結網址就進行request 縮圖網址就忽略
+                if (matchUrlGroup.Groups.Count>0)
+                {
+                    //============step1 先取得網頁頁面
+                    var client = new RestClient(url);
+                    var request = new RestRequest("", Method.GET);
+
+                    IRestResponse response = client.Execute(request);
+                    //這是回傳的html
+                    string html = response.Content;
+
+                    //=============step2 取得html裡 .php結尾的連結 需要附加file_code的cookie
+                    //才會回傳必須的hidden value
+                    Regex matchRealUrl = new Regex(
+                   @"(?<link>http://imgrock.net/\w+.php)"
+                   , RegexOptions.Multiline);
+                    string RealLink = matchRealUrl.Match(html).Groups["link"].Value;
+                    var clientRealLink = new RestClient(RealLink);
+                    var requestRealLink = new RestRequest("", Method.GET);
+
+                    requestRealLink.AddParameter("file_code", fileCode, ParameterType.Cookie);
+                    IRestResponse responseRealLink = clientRealLink.Execute(requestRealLink);
+                    //這是回傳的html
+                    string html3 = responseRealLink.Content;
+
+
+                    //=============step3 取得隱藏欄位的值組成cookie
+
+                    Regex matchHiddenValue = new Regex(
+    @"<input\stype=""hidden""\sname=""(?<hidden>\w{10,})""\svalue=""1"">"
+    , RegexOptions.Multiline);
+                    Match matchImgRockGroup = matchHiddenValue.Match(html3);
+                    string hiddenValue = matchImgRockGroup.Groups["hidden"].Value;
+
+                    var clientBigImg = new RestClient(RealLink);
+                    var requestBigImg = new RestRequest("", Method.POST);
+                    requestBigImg.JsonSerializer.ContentType = "application/x-www-form-urlencoded";
+
+                    //============step4 加上cookie 再Post request .php
+
+                    requestBigImg.AddParameter("op", "view", ParameterType.Cookie);
+                    requestBigImg.AddParameter("id", fileCode, ParameterType.Cookie);
+                    requestBigImg.AddParameter("pre", "1", ParameterType.Cookie);
+                    requestBigImg.AddParameter(hiddenValue, "1", ParameterType.Cookie);
+                    IRestResponse responseBigImage = clientBigImg.Execute(requestBigImg);
+                    //這是回傳的html
+                    string html4 = responseBigImage.Content;
+
+                    Regex ptAllUrl = new Regex(
+                    @"(?<url>http://\w+.(imgflare|imgbabes).com/files/(?:[\w-]+/?)+.jpe?g)"
+                    , RegexOptions.Multiline);
+                    BigImageUrl = ptAllUrl.Match(html4).Groups["url"].Value;
+
+
+                }
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
 

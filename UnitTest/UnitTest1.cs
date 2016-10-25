@@ -87,6 +87,19 @@ namespace UnitTest
             }
         }
 
+        [TestMethod]
+        //判斷imgrock能不能傳回大圖
+        public void TestImgrock()
+        {
+            //輸入小圖的網址 
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgrock.net/2uegtq384m9i/JUX-999.jpg.html");
+            Assert.IsTrue(urlList.Count > 0);
+            foreach (var url in urlList)
+            {
+                Assert.IsTrue(Regex.IsMatch(url, @"http://[\d\w]+.imgrock.net/img/\w+/[\w-]+.jpe?g", RegexOptions.Singleline));
+            }
+        }
+
 
         [TestMethod]
         //測試抓不到預覽圖時的事件 1.彈出提示訊息 2.不顯示訊息 3.直接在瀏覽器開啟
