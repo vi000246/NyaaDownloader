@@ -92,7 +92,7 @@ namespace NyaaRSSreader
             return BigImageList;
         }
 
-        #region 取得大圖的各圖床委派
+        #region 字典 取得大圖的各圖床委派
         /// <summary>
         /// 儲存各圖床需要叫用的方法 輸入網址會回傳大圖網址
         /// 用法: string newUrl=functions["imgdream"]("http://www.test.com.tw");
@@ -132,6 +132,8 @@ namespace NyaaRSSreader
             //imgrock
             {"imgrock",Url_imgrock}
         };
+        #endregion
+
 
         //移除_thumb
         private static string Url_deleteThumb(string url)
@@ -163,7 +165,7 @@ namespace NyaaRSSreader
         {
             return url.Replace(".php?", "/") + ".jpg";
         }
-
+        #region imagebam專用
         //imagebam專用
         private static string Url_imagebam(string url)
         {
@@ -190,7 +192,9 @@ namespace NyaaRSSreader
 
             return BigImageUrl;
         }
+        #endregion
 
+        #region imgbabes和imgflare專用
         //imgbabes和imgflare專用
         private static string Url_ImgbabesAndImgflare(string url)
         {
@@ -249,7 +253,10 @@ namespace NyaaRSSreader
 
             return BigImageUrl;
         }
+        #endregion
 
+        #region imgrock專用
+        //imgrock專用
         private static string Url_imgrock(string url) {
             string BigImageUrl = string.Empty;
             try
@@ -325,11 +332,10 @@ namespace NyaaRSSreader
 
             return BigImageUrl;
         }
-
-
-
-
         #endregion
+
+
+
 
 
 
