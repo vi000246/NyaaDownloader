@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Jint;
+using System.Web;
 
 namespace NyaaRSSreader
 {
@@ -297,14 +298,16 @@ namespace NyaaRSSreader
 
                     var clientBigImg = new RestClient(RealLink);
                     var requestBigImg = new RestRequest("", Method.POST);
-                    requestBigImg.JsonSerializer.ContentType = "application/x-www-form-urlencoded";
+                    requestBigImg.AddHeader("content-type", "application/x-www-form-urlencoded");
 
                     //============step4 加上cookie 再Post request .php
+                    string cookie = string.Format(@"view&id={0}&pre=1&{1}=1", fileCode, hiddenValue);
+                    requestBigImg.AddParameter("op", cookie, ParameterType.Cookie);
 
-                    requestBigImg.AddParameter("op", "view", ParameterType.Cookie);
-                    requestBigImg.AddParameter("id", fileCode, ParameterType.Cookie);
-                    requestBigImg.AddParameter("pre", "1", ParameterType.Cookie);
-                    requestBigImg.AddParameter(hiddenValue, "1", ParameterType.Cookie);
+                    //requestBigImg.AddParameter("op", "view", ParameterType.Cookie);
+                    //requestBigImg.AddParameter("id", fileCode, ParameterType.Cookie);
+                    //requestBigImg.AddParameter("pre", "1", ParameterType.Cookie);
+                    //requestBigImg.AddParameter(hiddenValue, "1", ParameterType.Cookie);
                     IRestResponse responseBigImage = clientBigImg.Execute(requestBigImg);
                     //這是回傳的html
                     string html4 = responseBigImage.Content;
