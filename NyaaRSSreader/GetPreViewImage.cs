@@ -301,19 +301,21 @@ namespace NyaaRSSreader
                     requestBigImg.AddHeader("content-type", "application/x-www-form-urlencoded");
 
                     //============step4 加上cookie 再Post request .php
-                    string cookie = string.Format(@"view&id={0}&pre=1&{1}=1", fileCode, hiddenValue);
-                    requestBigImg.AddParameter("op", cookie, ParameterType.Cookie);
 
-                    //requestBigImg.AddParameter("op", "view", ParameterType.Cookie);
-                    //requestBigImg.AddParameter("id", fileCode, ParameterType.Cookie);
-                    //requestBigImg.AddParameter("pre", "1", ParameterType.Cookie);
-                    //requestBigImg.AddParameter(hiddenValue, "1", ParameterType.Cookie);
+                    //這串cookie要空一行才有效 有夠難搞
+                    //string cookie = string.Format(@"view&id={0}&pre=1&{1}=1", fileCode, hiddenValue);
+                    //requestBigImg.AddParameter("op", cookie, ParameterType.Cookie);
+
+                    requestBigImg.AddParameter("op", "view");
+                    requestBigImg.AddParameter("id", fileCode);
+                    requestBigImg.AddParameter("pre", "1");
+                    requestBigImg.AddParameter(hiddenValue, "1");
                     IRestResponse responseBigImage = clientBigImg.Execute(requestBigImg);
                     //這是回傳的html
                     string html4 = responseBigImage.Content;
 
                     Regex ptAllUrl = new Regex(
-                    @"(?<url>http://\w+.(imgflare|imgbabes).com/files/(?:[\w-]+/?)+.jpe?g)"
+                    @"(?<url>http://\w+.imgrock.net/img/(?:[\w-]+/?)+.jpe?g)"
                     , RegexOptions.Multiline);
                     BigImageUrl = ptAllUrl.Match(html4).Groups["url"].Value;
 
