@@ -300,11 +300,7 @@ namespace NyaaRSSreader
                     var requestBigImg = new RestRequest("", Method.POST);
                     requestBigImg.AddHeader("content-type", "application/x-www-form-urlencoded");
 
-                    //============step4 加上cookie 再Post request .php
-
-                    //這串cookie要空一行才有效 有夠難搞
-                    //string cookie = string.Format(@"view&id={0}&pre=1&{1}=1", fileCode, hiddenValue);
-                    //requestBigImg.AddParameter("op", cookie, ParameterType.Cookie);
+                    //============step4 加上Body 再Post request .php
 
                     requestBigImg.AddParameter("op", "view");
                     requestBigImg.AddParameter("id", fileCode);
