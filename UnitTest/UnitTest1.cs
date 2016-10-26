@@ -40,7 +40,7 @@ namespace UnitTest
         //判斷imgchili能不能傳回大圖
         public void TestImgchili() {
             //輸入小圖的網址 
-            var urlList = new GetPreViewImage().GetBigImageUrl("http://t10.imgchili.net/90670/90670491_nktv_007.jpg");
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgchili.net/show/93968/93968793_2fdb098b1dd4dd45b915108c3ceff.jpg");
             Assert.IsTrue(urlList.Count > 0);
             foreach (var url in urlList)
             {

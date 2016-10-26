@@ -153,12 +153,34 @@ namespace NyaaRSSreader
         {
             return url;
         }
+        #region imgchili專用
         //imgchili專用
         private static string Url_imgchili(string url)
         {
-            //將t10、t6、t100之類的字串換成i10、i6、i100
-            return Regex.Replace(url, @"t(\d{0,3})\.", m => "i" + m.Groups[1].Value + ".");
+            string BigImageUrl = string.Empty;
+
+            if (url.IndexOf("show") > -1)
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest("", Method.GET);
+                request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
+                IRestResponse response = client.Execute(request);
+                //這是回傳的html
+                string html = response.Content;
+
+                Regex ptAllUrl = new Regex(
+                @"(?<url>https?://i\d{0,3}.imgchili.net(?:[\d\w-_./\?]*)[\d\w-_.]*.jpe?g)"
+                , RegexOptions.Multiline);
+                BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
+            }
+            else
+            {
+                //將t10、t6、t100之類的字串換成i10、i6、i100
+                BigImageUrl = Regex.Replace(url, @"t(\d{0,3})\.", m => "i" + m.Groups[1].Value + ".");
+            }
+            return BigImageUrl;
         }
+        #endregion
         //ultraimg專用
         private static string Url_ultraimg(string url)
         {

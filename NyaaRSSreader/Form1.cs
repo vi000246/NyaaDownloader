@@ -159,22 +159,18 @@ namespace NyaaRSSreader
                             List<string> imageFileList=new List<string>();
                             string url = row.Cells["articleLink"].Value.ToString();
                             List<Image> imageFiles = new List<Image>();
-                            //    var t = new Thread(() => 
-                            // imageFileList = new GetPreViewImage().CallImageHanderdle(url)
-                            //);
-                            //    t.IsBackground = true;
-                            //    t.Start();
-                            //    t.Join();
-                            //    ImagePopup(imageFileList, row,url);
+
                             var bw = new BackgroundWorker();
                             bw.DoWork += (sender1, args) => {
+                                //取得大圖的url
                                 imageFileList = new GetPreViewImage().CallImageHanderdle(url);
   
                                 imageFileList.ForEach(delegate(String imgurl)
                                 {
+                                    //讀取大圖存進list
                                     Image tempFile = LoadBitmap(imgurl);
                                     imageFiles.Add(tempFile);
-                                   // tempFile.Dispose();
+                                    tempFile.Dispose();
                                 });
                                 args.Result = imageFiles;
 
@@ -182,7 +178,16 @@ namespace NyaaRSSreader
                             };
                             bw.RunWorkerCompleted += (sender1, args) =>
                             {
-                                ImagePopup((List<Image>)args.Result, row, url);
+                                //如果取得圖片有exception
+                                if (args.Error != null)
+                                {
+                                    //彈出視窗詢問是否直接開啟網頁
+                                    ImageNotFindBehavior(url, "na");
+                                }
+                                else
+                                {
+                                    ImagePopup((List<Image>)args.Result, row, url);
+                                }
                             };
 
                             bw.RunWorkerAsync(); // starts the background worker
@@ -632,21 +637,25 @@ namespace NyaaRSSreader
         private Image LoadBitmap(string imageUrl)
         {
             Image image;
-
-            //var request = WebRequest.Create(imageUrl);
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(imageUrl);
-            //如果是biz連結 需要加上Referer才能取到圖片
-            if (imageUrl.Contains("biz"))
+            try
             {
-                request.Referer = imageUrl.Replace("i/","i.php?").Replace(".jpg","");
-            }
+                //var request = WebRequest.Create(imageUrl);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(imageUrl);
+                //如果是biz連結 需要加上Referer才能取到圖片
+                if (imageUrl.Contains("biz"))
+                {
+                    request.Referer = imageUrl.Replace("i/", "i.php?").Replace(".jpg", "");
+                }
 
-            using (var response = request.GetResponse())
-            using (var stream = response.GetResponseStream())
-            {
-                image = Image.FromStream(stream);
+                using (var response = request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                {
+                    image = Image.FromStream(stream);
+                }
             }
-
+            catch (Exception ex) {
+                throw ex;
+            }
             return image;
         }
         #endregion
