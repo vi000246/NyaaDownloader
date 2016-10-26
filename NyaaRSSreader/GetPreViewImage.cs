@@ -132,7 +132,9 @@ namespace NyaaRSSreader
             //imgrock
             {"imgrock",Url_imgrock},
             //pixsense
-            {"pixsense",Url_pixsense}
+            {"pixsense",Url_pixsense},
+            //imgseed 有驗證碼 無法破解
+            //{"imgseed",Url_imgseed}
         };
         #endregion
 
@@ -214,7 +216,7 @@ namespace NyaaRSSreader
                 string html = response.Content;
 
                 Regex ptAllUrl = new Regex(
-                @"(?<url>http://[\d\w]+.pixsense.net/[\w-/_#&]+.jpe?g)"
+                @"(?<url>http://[\d\w]+.pixsense.net/themes/[\w-/_#&]+.jpe?g)"
                 , RegexOptions.Multiline);
                 BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
 
@@ -223,6 +225,36 @@ namespace NyaaRSSreader
 
             return BigImageUrl;
         }
+        #endregion
+
+        #region imgseed專用
+        //有驗證碼 破解不了
+        //imgseed專用
+        //private static string Url_imgseed(string url)
+        //{
+        //    string BigImageUrl = string.Empty;
+        //    //需要同意瀏覽18禁連結的cookie 無解
+
+        //    //如果是連結網址就進行request 縮圖網址就忽略
+        //    if (Regex.IsMatch(url, @"^http://[\w\.]*imgseed.com/[\w/#&-]+.html$"))
+        //    {
+        //        var client = new RestClient(url);
+        //        var request = new RestRequest("", Method.GET);
+        //        request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
+        //        IRestResponse response = client.Execute(request);
+        //        //這是回傳的html
+        //        string html = response.Content;
+
+        //        Regex ptAllUrl = new Regex(
+        //        @"(?<url>http://[\w\.]*imgseed.com/upload/big/[\w-/_#&]+.jpe?g)"
+        //        , RegexOptions.Multiline);
+        //        BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
+
+
+        //    }
+
+        //    return BigImageUrl;
+        //}
         #endregion
 
         #region imgbabes和imgflare專用

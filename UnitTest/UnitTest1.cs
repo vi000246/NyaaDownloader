@@ -113,6 +113,18 @@ namespace UnitTest
             }
         }
 
+        [TestMethod]
+        //判斷imgseed能不能傳回大圖
+        public void TestImgseed()
+        {
+            //輸入小圖的網址 
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgseed.com/img-580caec7c38ee.html");
+            Assert.IsTrue(urlList.Count > 0);
+            foreach (var url in urlList)
+            {
+                Assert.IsTrue(Regex.IsMatch(url, @"http://[\d\w]+.pixsense.net/themes/[\w-/_#&]+.jpe?g", RegexOptions.Singleline));
+            }
+        }
 
         [TestMethod]
         //測試抓不到預覽圖時的事件 1.彈出提示訊息 2.不顯示訊息 3.直接在瀏覽器開啟
