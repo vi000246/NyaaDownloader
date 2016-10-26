@@ -154,10 +154,38 @@ namespace NyaaRSSreader
                     if (e.ColumnIndex == dataGridView1.Columns["btnView"].Index && e.RowIndex >= 0)
                     {
                         if (row.Cells["articleLink"].Value != null)
-                        {
-                                var t = new Thread(() => ImagePopup(row.Cells["articleLink"].Value.ToString(), row));
-                                t.IsBackground = true;
-                                t.Start();
+                        {                
+                            //取得圖片網址List
+                            List<string> imageFileList=new List<string>();
+                            string url = row.Cells["articleLink"].Value.ToString();
+                            List<Image> imageFiles = new List<Image>();
+                            //    var t = new Thread(() => 
+                            // imageFileList = new GetPreViewImage().CallImageHanderdle(url)
+                            //);
+                            //    t.IsBackground = true;
+                            //    t.Start();
+                            //    t.Join();
+                            //    ImagePopup(imageFileList, row,url);
+                            var bw = new BackgroundWorker();
+                            bw.DoWork += (sender1, args) => {
+                                imageFileList = new GetPreViewImage().CallImageHanderdle(url);
+  
+                                imageFileList.ForEach(delegate(String imgurl)
+                                {
+                                    Image tempFile = LoadBitmap(imgurl);
+                                    imageFiles.Add(tempFile);
+                                   // tempFile.Dispose();
+                                });
+                                args.Result = imageFiles;
+
+ 
+                            };
+                            bw.RunWorkerCompleted += (sender1, args) =>
+                            {
+                                ImagePopup((List<Image>)args.Result, row, url);
+                            };
+
+                            bw.RunWorkerAsync(); // starts the background worker
                         }
                         else
                         {
@@ -219,19 +247,16 @@ namespace NyaaRSSreader
         /// 傳入文章頁面 解析出圖片再popup出來
         /// </summary>
         /// <param name="url"></param>
-        public void ImagePopup(string url,DataGridViewRow Row) {
+        public void ImagePopup(List<Image> imageFileList, DataGridViewRow Row, string url)
+        {
             try
             {
-                //取得圖片網址List
-                List<string> imageFileList = new GetPreViewImage().CallImageHanderdle(url);
                 //如果有解析到圖片
                 if (imageFileList.Count > 0)
                 {
                     if (FormSetting.IsEnablePopup)
                     {
-                        using (Form form = new Form())
-                        {
-
+                            Form form =new Form();
                             form.StartPosition = FormStartPosition.CenterScreen;
                             //popup視窗標題
                             string Size = Row.Cells["Size"] == null ? "" : Row.Cells["Size"].Value.ToString();
@@ -242,7 +267,7 @@ namespace NyaaRSSreader
                             int TotalHeight = FormSetting.PopupWindow.btnDownloadHeight;
                             int MaxWidth = 0;
                             //依據imageList的個數 產生出數個picturebox
-                            foreach (var imageFile in imageFileList)
+                            foreach (Image imageFile in imageFileList)
                             {
                                 PictureBox eachPictureBox = new PictureBox();
                                 form.Controls.Add(eachPictureBox);
@@ -250,8 +275,7 @@ namespace NyaaRSSreader
                                 //將圖片下移總高度
                                 eachPictureBox.Top = TotalHeight;
                                 //載入圖片
-                                //eachPictureBox.Load(imageFile);
-                                eachPictureBox.Image = LoadBitmap(imageFile);
+                                eachPictureBox.Image = imageFile;
 
                                 //如果總高度小於螢幕高度 將總高度加上此圖片的高度
                                 if (TotalHeight + eachPictureBox.Size.Height < Screen.PrimaryScreen.Bounds.Height)
@@ -299,8 +323,7 @@ namespace NyaaRSSreader
                                 form.AutoScroll = true;
                             //表單透明度 記得拿掉
                             form.Opacity = FormSetting.FormOpaticy;
-                            form.ShowDialog();
-                        }//end of using form
+                            form.Show();
                     }//end of FormSetting.IsEnablePopup
 
                 }
@@ -361,10 +384,8 @@ namespace NyaaRSSreader
         {
             int selectedIndex=0;
             //下拉選單選中的值  0:提醒視窗 1:忽略 2:自動開啟連結
-            cbPopWindowBehavior.InvokeIfRequired(() =>
-            {
-                selectedIndex = cbPopWindowBehavior.SelectedIndex;
-            });
+            selectedIndex = cbPopWindowBehavior.SelectedIndex;
+
 
             string msg="";
             if (type == "error")
@@ -623,7 +644,7 @@ namespace NyaaRSSreader
             using (var response = request.GetResponse())
             using (var stream = response.GetResponseStream())
             {
-                image=Bitmap.FromStream(stream);
+                image = Image.FromStream(stream);
             }
 
             return image;
