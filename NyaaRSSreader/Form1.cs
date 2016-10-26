@@ -170,7 +170,6 @@ namespace NyaaRSSreader
                                     //讀取大圖存進list
                                     Image tempFile = LoadBitmap(imgurl);
                                     imageFiles.Add(tempFile);
-                                    tempFile.Dispose();
                                 });
                                 args.Result = imageFiles;
 
@@ -182,10 +181,11 @@ namespace NyaaRSSreader
                                 if (args.Error != null)
                                 {
                                     //彈出視窗詢問是否直接開啟網頁
-                                    ImageNotFindBehavior(url, "na");
+                                    ImageNotFindBehavior(url, "error");
                                 }
                                 else
                                 {
+                                    //彈出視窗
                                     ImagePopup((List<Image>)args.Result, row, url);
                                 }
                             };

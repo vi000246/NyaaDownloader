@@ -53,7 +53,7 @@ namespace UnitTest
         public void Testimgdream()
         {
             //輸入小圖的網址 
-            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgdream.net/images/21933295703414693413_thumb.jpg");
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgdream.net/images/41748499593488458535.jpg");
             Assert.IsTrue(urlList.Count > 0);
             foreach (var url in urlList)
             {
