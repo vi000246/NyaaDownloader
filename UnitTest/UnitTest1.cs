@@ -134,11 +134,11 @@ namespace UnitTest
             //輸入小圖的網址 
         //            http://imgleveret.com/img-58102fd94a437.html 
         //http://imagedecode.com/img-580f72216b83d.html 
-            var urlList = new GetPreViewImage().GetBigImageUrl(@"http://imgstudio.org/upload/small/2016/10/26/58102ff4f1275.jpeg");
+            var urlList = new GetPreViewImage().GetBigImageUrl(@"http://damimage.com/img-5810c8032ac04.html");
             Assert.IsTrue(urlList.Count > 0);
             foreach (var url in urlList)
             {
-                Assert.IsTrue(Regex.IsMatch(url, @"http://[\w\.]*(imgleveret|imagedecode|porn84|imageteam|imgstudio).(com|org)/upload/big/[\w-/_#&]+.jpe?g", RegexOptions.Singleline));
+                Assert.IsTrue(Regex.IsMatch(url, @"http://[\w\.]*(imgleveret|imagedecode|porn84|imageteam|imgstudio|damimage).(com|org)/upload/big/[\w-/_#&]+.jpe?g", RegexOptions.Singleline));
             }
         }
 
