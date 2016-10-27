@@ -114,15 +114,17 @@ namespace UnitTest
         }
 
         [TestMethod]
-        //判斷imgseed能不能傳回大圖
-        public void TestImgseed()
+        //大圖網址像 upload/big/2016/10/25/580f7084e76dc.jpg 的網站專用
+        public void TestUrl_UploadBig()
         {
             //輸入小圖的網址 
-            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgseed.com/img-580caec7c38ee.html");
+        //            http://imgleveret.com/img-58102fd94a437.html 
+        //http://imagedecode.com/img-580f72216b83d.html 
+            var urlList = new GetPreViewImage().GetBigImageUrl(@"http://porn84.org/img-580f7084e7728.html");
             Assert.IsTrue(urlList.Count > 0);
             foreach (var url in urlList)
             {
-                Assert.IsTrue(Regex.IsMatch(url, @"http://[\d\w]+.pixsense.net/themes/[\w-/_#&]+.jpe?g", RegexOptions.Singleline));
+                Assert.IsTrue(Regex.IsMatch(url, @"http://[\w\.]*(imgleveret|imagedecode|porn84).(com|org)/upload/big/[\w-/_#&]+.jpe?g", RegexOptions.Singleline));
             }
         }
 

@@ -111,7 +111,7 @@ namespace NyaaRSSreader
             {"imgseed",Url_changeSmallToBig},
             {"55888",Url_changeSmallToBig},
             {"imageteam",Url_changeSmallToBig},
-            {"imagedecode",Url_changeSmallToBig},
+            //{"imagedecode",Url_changeSmallToBig},
             {"hentai",Url_changeSmallToBig},
             //直接回傳
             {"pics.dmm",Url_Direct},
@@ -135,6 +135,11 @@ namespace NyaaRSSreader
             {"pixsense",Url_pixsense},
             //imgseed 有驗證碼 無法破解
             //{"imgseed",Url_imgseed}
+
+            //大圖網址像 upload/big/2016/10/25/580f7084e76dc.jpg 的網站專用
+            {"imgleveret",Url_UploadBig},
+            {"imagedecode",Url_UploadBig},
+            {"porn84",Url_UploadBig},
         };
         #endregion
 
@@ -249,34 +254,38 @@ namespace NyaaRSSreader
         }
         #endregion
 
-        #region imgseed專用
-        //有驗證碼 破解不了
-        //imgseed專用
-        //private static string Url_imgseed(string url)
-        //{
-        //    string BigImageUrl = string.Empty;
-        //    //需要同意瀏覽18禁連結的cookie 無解
+        #region 大圖網址像 upload/big/2016/10/25/580f7084e76dc.jpg 的網站專用
+        //imgleveret Imagedecode專用
+        private static string Url_UploadBig(string url)
+        {
+            string BigImageUrl = string.Empty;
+            //需要同意瀏覽18禁連結的cookie 無解
 
-        //    //如果是連結網址就進行request 縮圖網址就忽略
-        //    if (Regex.IsMatch(url, @"^http://[\w\.]*imgseed.com/[\w/#&-]+.html$"))
-        //    {
-        //        var client = new RestClient(url);
-        //        var request = new RestRequest("", Method.GET);
-        //        request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
-        //        IRestResponse response = client.Execute(request);
-        //        //這是回傳的html
-        //        string html = response.Content;
+            //如果是連結網址就進行request 縮圖網址就忽略
+            if (Regex.IsMatch(url, @"^http://[\w\.]*(imgleveret|imagedecode|porn84).(com|org)/[\w/#&-]+.html$"))
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest("", Method.GET);
+                request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
+                IRestResponse response = client.Execute(request);
+                //這是回傳的html
+                string html = response.Content;
 
-        //        Regex ptAllUrl = new Regex(
-        //        @"(?<url>http://[\w\.]*imgseed.com/upload/big/[\w-/_#&]+.jpe?g)"
-        //        , RegexOptions.Multiline);
-        //        BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
+                Regex ptAllUrl = new Regex(
+                @"(?<url>http://[\w\.]*(imgleveret|imagedecode|porn84).(com|org)/upload/big/[\w-/_#&]+.jpe?g)"
+                , RegexOptions.Multiline);
+                BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
 
 
-        //    }
+            }
+            //如果傳來的是小圖的網址 
+            else if (Regex.IsMatch(url, @".*jpe?g"))
+            {
+                BigImageUrl = Url_changeSmallToBig(url);
+            }
 
-        //    return BigImageUrl;
-        //}
+            return BigImageUrl;
+        }
         #endregion
 
         #region imgbabes和imgflare專用
