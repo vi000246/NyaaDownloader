@@ -355,7 +355,7 @@ namespace NyaaRSSreader
                 string fileCode = matchUrlGroup.Groups["file_code"].Value;
 
                 //如果是連結網址就進行request 縮圖網址就忽略
-                if (matchUrlGroup.Groups.Count>0)
+                if (matchUrlGroup.Success)
                 {
                     //============step1 先取得網頁頁面
                     var client = new RestClient(url);

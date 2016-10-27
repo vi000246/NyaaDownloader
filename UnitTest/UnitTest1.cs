@@ -40,7 +40,7 @@ namespace UnitTest
         //判斷imgchili能不能傳回大圖
         public void TestImgchili() {
             //輸入小圖的網址 
-            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgchili.net/show/93968/93968793_2fdb098b1dd4dd45b915108c3ceff.jpg");
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://t10.imgchili.net/93906/93906255_49gesu012pl.jpg");
             Assert.IsTrue(urlList.Count > 0);
             foreach (var url in urlList)
             {
@@ -66,7 +66,7 @@ namespace UnitTest
         public void TestImgbabesAndImgFlare()
         {
             //輸入小圖的網址 
-            var urlList = new GetPreViewImage().GetBigImageUrl("http://www.imgbabes.com/b4y95hmejbou/102216_01-10mu-1080p.jpeg.html");
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://www.imgbabes.com/g5e4vg38gwhd/XVSR-169_s.jpg.html");
             Assert.IsTrue(urlList.Count > 0);
             foreach (var url in urlList)
             {
@@ -92,7 +92,7 @@ namespace UnitTest
         public void TestImgrock()
         {
             //輸入小圖的網址 
-            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgrock.net/2uegtq384m9i/JUX-999.jpg.html");
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgrock.net/sgy68jca9je4/a66.jpg.html");
             Assert.IsTrue(urlList.Count > 0);
             foreach (var url in urlList)
             {

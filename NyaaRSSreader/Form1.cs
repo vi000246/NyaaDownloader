@@ -638,7 +638,7 @@ namespace NyaaRSSreader
         //pictureBox載入圖片用的method
         private Image LoadBitmap(string imageUrl)
         {
-            Image image;
+            Image image = null;
             try
             {
                 //var request = WebRequest.Create(imageUrl);
@@ -655,9 +655,9 @@ namespace NyaaRSSreader
                     image = Image.FromStream(stream);
                 }
             }
-            catch (Exception ex) {
-                throw ex;
-            }
+            //忽略錯誤 避免有些圖片已經Dead了會出錯
+            catch { }
+
             return image;
         }
         #endregion
