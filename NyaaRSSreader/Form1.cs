@@ -148,6 +148,9 @@ namespace NyaaRSSreader
                 {
 
                     DataGridViewRow row = this.dataGridView1.Rows[e.RowIndex];
+                    string url = row.Cells["articleLink"].Value.ToString();
+                    string DownloadLink = row.Cells["DownloadLink"].Value.ToString();
+
                     #region GridView的預覽按鈕Click
                     //==============
                     //如果按下的是預覽按鈕
@@ -157,7 +160,6 @@ namespace NyaaRSSreader
                         {                
                             //取得圖片網址List
                             List<string> imageFileList=new List<string>();
-                            string url = row.Cells["articleLink"].Value.ToString();
                             List<Image> imageFiles = new List<Image>();
 
                             var bw = new BackgroundWorker();
@@ -186,7 +188,7 @@ namespace NyaaRSSreader
                                 else
                                 {
                                     //彈出視窗
-                                    ImagePopup((List<Image>)args.Result, row, url);
+                                    ImagePopup((List<Image>)args.Result, row, url, DownloadLink);
                                 }
                             };
 
@@ -204,9 +206,9 @@ namespace NyaaRSSreader
                     //如果按下的是下載按鈕
                     if (e.ColumnIndex == dataGridView1.Columns["btnDownload"].Index && e.RowIndex >= 0)
                     {
-                        if (row.Cells["DownloadLink"] != null)
+                        if (!string.IsNullOrEmpty(DownloadLink))
                         {
-                            var t = new Thread(() => DownloadTorr(row.Cells["DownloadLink"].Value.ToString()));
+                            var t = new Thread(() => DownloadTorr(DownloadLink));
                             t.IsBackground = true;
                             t.Start();
                         }
@@ -252,7 +254,7 @@ namespace NyaaRSSreader
         /// 傳入文章頁面 解析出圖片再popup出來
         /// </summary>
         /// <param name="url"></param>
-        public void ImagePopup(List<Image> imageFileList, DataGridViewRow Row, string url)
+        public void ImagePopup(List<Image> imageFileList, DataGridViewRow Row, string url,string DownloadLink)
         {
             try
             {
@@ -317,11 +319,11 @@ namespace NyaaRSSreader
                             form.Controls.Add(info);
 
                             //綁定下載按鈕點擊事件
-                            btnDownload.Click += (sender, EventArgs) => buttonDownload_Click(sender, EventArgs, Row.Cells["DownloadLink"]);
+                            btnDownload.Click += (sender, EventArgs) => buttonDownload_Click(sender, EventArgs, DownloadLink);
                             //啟用form的點擊事件
                             form.KeyPreview = true;
                             //綁定form的熱鍵
-                            form.KeyDown += (sender, e) => this.PopFormHotKey(sender, e, form, Row.Cells["DownloadLink"]);
+                            form.KeyDown += (sender, e) => this.PopFormHotKey(sender, e, form, DownloadLink);
 
                             //如果預覽圖大於螢幕高度 就增加捲軸
                             if (TotalHeight >= (Screen.PrimaryScreen.Bounds.Height - 50))
@@ -345,11 +347,11 @@ namespace NyaaRSSreader
         }
 
         //popup視窗的下載按鈕點擊事件
-        void buttonDownload_Click(object sender, EventArgs e, DataGridViewCell CellValue)
+        void buttonDownload_Click(object sender, EventArgs e, string DownloadLink)
         {
-            if (CellValue != null)
+            if (!string.IsNullOrEmpty(DownloadLink))
             {
-                var t = new Thread(() => DownloadTorr(CellValue.Value.ToString()));
+                var t = new Thread(() => DownloadTorr(DownloadLink));
                 t.IsBackground = true;
                 t.Start();
             }
@@ -359,13 +361,13 @@ namespace NyaaRSSreader
 
 
         //綁定視窗的熱鍵
-        void PopFormHotKey(object sender, KeyEventArgs e, Form form, DataGridViewCell CellValue)
+        void PopFormHotKey(object sender, KeyEventArgs e, Form form, string DownloadLink)
         {
             if (e.KeyCode == Keys.D || e.KeyCode == Keys.A)
             {
-                if (CellValue != null)
+                if (!string.IsNullOrEmpty(DownloadLink))
                 {
-                    var t = new Thread(() => DownloadTorr(CellValue.Value.ToString()));
+                    var t = new Thread(() => DownloadTorr(DownloadLink));
                     t.IsBackground = true;
                     t.Start();
                 }
