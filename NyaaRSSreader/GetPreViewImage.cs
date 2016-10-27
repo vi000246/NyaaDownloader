@@ -106,12 +106,9 @@ namespace NyaaRSSreader
             {"imgblank",Url_changeSmallToBig},
             {"img.yt",Url_changeSmallToBig},
             {"dimtus",Url_changeSmallToBig},
-            {"imgstudio",Url_changeSmallToBig},
             {"damimage",Url_changeSmallToBig},
             {"imgseed",Url_changeSmallToBig},
             {"55888",Url_changeSmallToBig},
-            {"imageteam",Url_changeSmallToBig},
-            //{"imagedecode",Url_changeSmallToBig},
             {"hentai",Url_changeSmallToBig},
             //直接回傳
             {"pics.dmm",Url_Direct},
@@ -140,6 +137,10 @@ namespace NyaaRSSreader
             {"imgleveret",Url_UploadBig},
             {"imagedecode",Url_UploadBig},
             {"porn84",Url_UploadBig},
+            {"imageteam",Url_UploadBig},
+            {"imgstudio",Url_UploadBig},
+            //imgtrex專用
+            {"imgtrex",Url_imgtrex}
         };
         #endregion
 
@@ -262,7 +263,7 @@ namespace NyaaRSSreader
             //需要同意瀏覽18禁連結的cookie 無解
 
             //如果是連結網址就進行request 縮圖網址就忽略
-            if (Regex.IsMatch(url, @"^http://[\w\.]*(imgleveret|imagedecode|porn84).(com|org)/[\w/#&-]+.html$"))
+            if (Regex.IsMatch(url, @"^http://[\w\.]*(imgleveret|imagedecode|porn84|imageteam|imgstudio).(com|org)/[\w/#&-]+.html$"))
             {
                 var client = new RestClient(url);
                 var request = new RestRequest("", Method.GET);
@@ -272,7 +273,41 @@ namespace NyaaRSSreader
                 string html = response.Content;
 
                 Regex ptAllUrl = new Regex(
-                @"(?<url>http://[\w\.]*(imgleveret|imagedecode|porn84).(com|org)/upload/big/[\w-/_#&]+.jpe?g)"
+                @"(?<url>http://[\w\.]*(imgleveret|imagedecode|porn84|imageteam|imgstudio).(com|org)/upload/big/[\w-/_#&]+.jpe?g)"
+                , RegexOptions.Multiline);
+                BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
+
+
+            }
+            //如果傳來的是小圖的網址 
+            else if (Regex.IsMatch(url, @".*jpe?g"))
+            {
+                BigImageUrl = Url_changeSmallToBig(url);
+            }
+
+            return BigImageUrl;
+        }
+        #endregion
+
+        #region imgtrex專用
+        //imgtrex專用
+        private static string Url_imgtrex(string url)
+        {
+            string BigImageUrl = string.Empty;
+            //需要同意瀏覽18禁連結的cookie 無解
+
+            //如果是連結網址就進行request 縮圖網址就忽略
+            if (Regex.IsMatch(url, @"^http://imgtrex.com/[\w/-]+.jpe?g$"))
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest("", Method.GET);
+                request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
+                IRestResponse response = client.Execute(request);
+                //這是回傳的html
+                string html = response.Content;
+
+                Regex ptAllUrl = new Regex(
+                @"(?<url>http://\w+.imgtrex.com/i/[\w/]+.jpe?g)"
                 , RegexOptions.Multiline);
                 BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
 
