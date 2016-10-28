@@ -150,7 +150,8 @@ namespace NyaaRSSreader
             {"imgrock",Url_continue},
             //擋continue to image
             {"imgcandy",Url_OneContinue},
-            {"img.yt",Url_OneContinue}
+            {"img.yt",Url_OneContinue},
+            {"idlelive",Url_OneContinue}
         };
         #endregion
 
@@ -236,27 +237,43 @@ namespace NyaaRSSreader
         }
         #endregion
 
-        #region 有擋Continue to Image的網站 imgcandy 、
-        //imageCandy專用
+        #region 有擋Continue to Image的網站 imgcandy 、img.yt、idlelive
         private static string Url_OneContinue(string url)
         {
             string BigImageUrl = string.Empty;
-            //需要同意瀏覽18禁連結的cookie 無解
+
+            //如果是idlelive 要先Get request一次 取得真正要連結的網址
+            if (Regex.IsMatch(url, @"^http://idlelive.com/[\w/_-]+$"))
+            {
+                 var client = new RestClient(url);
+                //這是Post
+                var request = new RestRequest("", Method.GET);
+                IRestResponse response = client.Execute(request);
+                //這是回傳的html
+                string html = response.Content;
+                Regex ptAllUrl = new Regex(
+              @"(?<url>http://thumbnailus.com/[\w-]+.html)"
+              , RegexOptions.Multiline);
+                //重設url為正確的url
+                url = ptAllUrl.Match(html).Groups["url"].Value;
+            }
 
             //如果是連結網址就進行request 縮圖網址就忽略
-            if (Regex.IsMatch(url, @"^https?://(imgcandy|img).(net|yt)/[\w/_-]+(.jpe?g)?.html$"))
+            if (Regex.IsMatch(url, @"^https?://(imgcandy|img|thumbnailus).(net|yt|com)/[\w/_-]+(.jpe?g)?.html$"))
             {
                 var client = new RestClient(url);
                 //這是Post
                 var request = new RestRequest("", Method.POST);
                 request.AddHeader("content-type", "application/x-www-form-urlencoded");
-                request.AddParameter("imgContinue", "Continue to your image");
+                //如果是thumbnailus 它要附加的字串跟其他家網站不一樣
+                string bodyParameter = url.Contains("thumbnailus") ? "Continue to View Screen image ... " : "Continue to your image";
+                request.AddParameter("imgContinue", bodyParameter);
                 IRestResponse response = client.Execute(request);
                 //這是回傳的html
                 string html = response.Content;
 
                 Regex ptAllUrl = new Regex(
-                @"(?<url>https?://(imgcandy|img).(net|yt)/upload/big/[\w-/_#&]+.jpe?g)"
+                @"(?<url>https?://(imgcandy|img|thumbnailus).(net|yt|com)/upload/big/[\w-/_#&]+.jpe?g)"
                 , RegexOptions.Multiline);
                 BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
             }
@@ -274,7 +291,7 @@ namespace NyaaRSSreader
         private static string Url_pixsense(string url)
         {
             string BigImageUrl = string.Empty;
-            //需要同意瀏覽18禁連結的cookie 無解
+
 
             //如果是連結網址就進行request 縮圖網址就忽略
             if (Regex.IsMatch(url, @"^http://\w+.pixsense.net/[\w/#&]+$"))
@@ -303,7 +320,6 @@ namespace NyaaRSSreader
         private static string Url_UploadBig(string url)
         {
             string BigImageUrl = string.Empty;
-            //需要同意瀏覽18禁連結的cookie 無解
 
             //如果是連結網址就進行request 縮圖網址就忽略
             if (Regex.IsMatch(url, @"^http://[\w\.]*(imgleveret|imagedecode|porn84|imageteam|imgstudio|damimage).(com|org)/[\w/#&-]+.html$"))
@@ -337,7 +353,6 @@ namespace NyaaRSSreader
         private static string Url_imgtrex(string url)
         {
             string BigImageUrl = string.Empty;
-            //需要同意瀏覽18禁連結的cookie 無解
 
             //如果是連結網址就進行request 縮圖網址就忽略
             if (Regex.IsMatch(url, @"^http://imgtrex.com/[\w/-]+.jpe?g$"))
@@ -371,7 +386,6 @@ namespace NyaaRSSreader
         private static string Url_ImgbabesAndImgflare(string url)
         {
             string BigImageUrl=string.Empty;
-            //需要同意瀏覽18禁連結的cookie 無解
             try
             {
                 //如果是連結網址就進行request 縮圖網址就忽略
