@@ -21,19 +21,26 @@ namespace NyaaRSSreader
         /// <param name="url"></param>
         public List<string> CallImageHanderdle(string url) 
         {
-            //取得頁面的html
-            var client = new RestClient(url);
-            var request = new RestRequest("", Method.GET);
-            IRestResponse response = client.Execute(request);
-            string html = response.Content;
+            string html = string.Empty;
+            try
+            {
+                //取得頁面的html
+                var client = new RestClient(url);
+                var request = new RestRequest("", Method.GET);
+                IRestResponse response = client.Execute(request);
+                html = response.Content;
 
-            //只取出html裡描述的部份 其他去掉
-            Regex pattern = new Regex(
-            @"<div\sclass=""viewdescription"">(?<content>.*)<h3>Files\sin\storrent\:</h3>"
-            , RegexOptions.Multiline);
-            Match content = pattern.Match(html);
-            html = content.Groups["content"].Value;
+                //只取出html裡描述的部份 其他去掉
+                Regex pattern = new Regex(
+                @"<div\sclass=""viewdescription"">(?<content>.*)<h3>Files\sin\storrent\:</h3>"
+                , RegexOptions.Multiline);
+                Match content = pattern.Match(html);
+                html = content.Groups["content"].Value;
 
+            }
+            catch (Exception ex) {
+                throw ex;
+            }
             return GetBigImageUrl(html);
         }
 

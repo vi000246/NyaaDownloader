@@ -148,15 +148,20 @@ namespace NyaaRSSreader
                 {
 
                     DataGridViewRow row = this.dataGridView1.Rows[e.RowIndex];
-                    string url = row.Cells["articleLink"].Value.ToString();
-                    string DownloadLink = row.Cells["DownloadLink"].Value.ToString();
+
+                    //建立Rss物件
+                    Model.RssObj RssObj = new Model.RssObj(
+                        row.Cells["articleLink"] == null ? "" : row.Cells["articleLink"].Value.ToString(),
+                        row.Cells["DownloadLink"] == null ? "" : row.Cells["DownloadLink"].Value.ToString(),
+                        row.Cells["Size"] == null ? "" : row.Cells["Size"].Value.ToString(),
+                        row.Cells["Title"] == null ? "" : row.Cells["Title"].Value.ToString());
 
                     #region GridView的預覽按鈕Click
                     //==============
                     //如果按下的是預覽按鈕
                     if (e.ColumnIndex == dataGridView1.Columns["btnView"].Index && e.RowIndex >= 0)
                     {
-                        if (row.Cells["articleLink"].Value != null)
+                        if (!string.IsNullOrEmpty(RssObj.ArticleLink))
                         {                
                             //取得圖片網址List
                             List<string> imageFileList=new List<string>();
@@ -165,7 +170,7 @@ namespace NyaaRSSreader
                             var bw = new BackgroundWorker();
                             bw.DoWork += (sender1, args) => {
                                 //取得大圖的url
-                                imageFileList = new GetPreViewImage().CallImageHanderdle(url);
+                                imageFileList = new GetPreViewImage().CallImageHanderdle(RssObj.ArticleLink);
   
                                 imageFileList.ForEach(delegate(String imgurl)
                                 {
@@ -183,12 +188,12 @@ namespace NyaaRSSreader
                                 if (args.Error != null)
                                 {
                                     //彈出視窗詢問是否直接開啟網頁
-                                    ImageNotFindBehavior(url, "error");
+                                    ImageNotFindBehavior(RssObj.ArticleLink, "error");
                                 }
                                 else
                                 {
                                     //彈出視窗
-                                    ImagePopup((List<Image>)args.Result, row, url, DownloadLink);
+                                    ImagePopup((List<Image>)args.Result, row, RssObj);
                                 }
                             };
 
@@ -206,9 +211,9 @@ namespace NyaaRSSreader
                     //如果按下的是下載按鈕
                     if (e.ColumnIndex == dataGridView1.Columns["btnDownload"].Index && e.RowIndex >= 0)
                     {
-                        if (!string.IsNullOrEmpty(DownloadLink))
+                        if (!string.IsNullOrEmpty(RssObj.DownloadLink))
                         {
-                            var t = new Thread(() => DownloadTorr(DownloadLink));
+                            var t = new Thread(() => DownloadTorr(RssObj.DownloadLink));
                             t.IsBackground = true;
                             t.Start();
                         }
@@ -254,7 +259,7 @@ namespace NyaaRSSreader
         /// 傳入文章頁面 解析出圖片再popup出來
         /// </summary>
         /// <param name="url"></param>
-        public void ImagePopup(List<Image> imageFileList, DataGridViewRow Row, string url,string DownloadLink)
+        public void ImagePopup(List<Image> imageFileList, DataGridViewRow Row, Model.RssObj RssObj)
         {
             try
             {
@@ -266,9 +271,8 @@ namespace NyaaRSSreader
                             Form form =new Form();
                             form.StartPosition = FormStartPosition.CenterScreen;
                             //popup視窗標題
-                            string Size = Row.Cells["Size"] == null ? "" : Row.Cells["Size"].Value.ToString();
-                            string Title = Row.Cells["Title"] == null ? "" : Row.Cells["Title"].Value.ToString();
-                            form.Text = "預覽圖 [" + Size + "] " + Title;
+
+                            form.Text = "預覽圖 [" + RssObj.Size + "] " + RssObj.Title;
 
                             //因為已經有按鈕了 所以從按鈕高度開始插入picturebox
                             int TotalHeight = FormSetting.PopupWindow.btnDownloadHeight;
@@ -319,11 +323,11 @@ namespace NyaaRSSreader
                             form.Controls.Add(info);
 
                             //綁定下載按鈕點擊事件
-                            btnDownload.Click += (sender, EventArgs) => buttonDownload_Click(sender, EventArgs, DownloadLink);
+                            btnDownload.Click += (sender, EventArgs) => buttonDownload_Click(sender, EventArgs, RssObj.DownloadLink);
                             //啟用form的點擊事件
                             form.KeyPreview = true;
                             //綁定form的熱鍵
-                            form.KeyDown += (sender, e) => this.PopFormHotKey(sender, e, form, DownloadLink);
+                            form.KeyDown += (sender, e) => this.PopFormHotKey(sender, e, form, RssObj.DownloadLink);
 
                             //如果預覽圖大於螢幕高度 就增加捲軸
                             if (TotalHeight >= (Screen.PrimaryScreen.Bounds.Height - 50))
@@ -331,17 +335,18 @@ namespace NyaaRSSreader
                             //表單透明度 記得拿掉
                             form.Opacity = FormSetting.FormOpaticy;
                             form.Show();
+                            
                     }//end of FormSetting.IsEnablePopup
 
                 }
                 else
                 {
                     //彈出視窗詢問是否直接開啟網頁
-                    ImageNotFindBehavior(url, "na");
+                    ImageNotFindBehavior(RssObj.ArticleLink, "na");
                 }
             }catch(Exception ex){
                 //彈出視窗詢問是否直接開啟網頁
-                ImageNotFindBehavior(url, "error");
+                ImageNotFindBehavior(RssObj.ArticleLink, "error");
             }
 
         }

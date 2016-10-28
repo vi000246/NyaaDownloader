@@ -64,6 +64,7 @@
     <Compile Include="FormSetting.cs" />
     <Compile Include="GetPreViewImage.cs" />
     <Compile Include="JShelper.cs" />
+    <Compile Include="Model.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
