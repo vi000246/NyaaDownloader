@@ -61,6 +61,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormControl.cs" />
     <Compile Include="FormSetting.cs" />
     <Compile Include="GetPreViewImage.cs" />
     <Compile Include="JShelper.cs" />

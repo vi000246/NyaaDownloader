@@ -334,7 +334,10 @@ namespace NyaaRSSreader
                                 form.AutoScroll = true;
                             //表單透明度 記得拿掉
                             form.Opacity = FormSetting.FormOpaticy;
-                            form.Show();
+               
+                            //form.Show();
+                            //讓視窗出現時不要取得focus
+                            FormControl.ShowInactiveTopmost(form);
                             
                     }//end of FormSetting.IsEnablePopup
 

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace NyaaRSSreader
 {
+    /// <summary>
+    /// 用來存放Javascript語法 使用Jint呼叫
+    /// </summary>
     public class JShelper
     {
         public const string Script = @"
