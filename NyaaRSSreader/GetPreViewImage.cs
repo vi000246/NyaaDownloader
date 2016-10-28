@@ -148,6 +148,7 @@ namespace NyaaRSSreader
             //擋continue to image 和input hidden value
             {"imgview",Url_continue},
             {"imgrock",Url_continue},
+            {"imgtown",Url_continue},
             //擋continue to image
             {"imgcandy",Url_OneContinue},
             {"img.yt",Url_OneContinue},
@@ -449,7 +450,7 @@ namespace NyaaRSSreader
             try
             {
                 Regex matchUrl = new Regex(
-                @"^http://\w*.?(?:imgrock|imgview).net/(?<file_code>\w+)/[\w\d\W]+.jpe?g.html$"
+                @"^http://\w*.?(?:imgrock|imgview|imgtown).net/(?<file_code>\w+)/[\w\d\W]+.jpe?g.html$"
                 , RegexOptions.Multiline);
                 Match matchUrlGroup = matchUrl.Match(url);
 
@@ -470,7 +471,7 @@ namespace NyaaRSSreader
                     //=============step2 取得html裡 .php結尾的連結 需要附加file_code的cookie
                     //才會回傳必須的hidden value
                     Regex matchRealUrl = new Regex(
-                   @"(?<link>http://(imgrock|imgview).net/\w+.php)"
+                   @"(?<link>http://(imgrock|imgview|imgtown).net/\w+.php)"
                    , RegexOptions.Multiline);
                     string RealLink = matchRealUrl.Match(html).Groups["link"].Value;
                     var clientRealLink = new RestClient(RealLink);
@@ -505,7 +506,7 @@ namespace NyaaRSSreader
                     string html4 = responseBigImage.Content;
 
                     Regex ptAllUrl = new Regex(
-                    @"(?<url>http://\w+.(imgrock|imgview).net/img/(?:[\w-]+/?)+.jpe?g)"
+                    @"(?<url>http://\w+.(imgrock|imgview|imgtown).net/img/(?:[\w-]+/?)+.jpe?g)"
                     , RegexOptions.Multiline);
                     BigImageUrl = ptAllUrl.Match(html4).Groups["url"].Value;
 
