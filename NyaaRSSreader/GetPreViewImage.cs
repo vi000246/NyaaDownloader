@@ -132,8 +132,6 @@ namespace NyaaRSSreader
             {"imgflare",Url_ImgbabesAndImgflare},
             //imagebam
             {"imagebam",Url_imagebam},
-            //imgrock
-            {"imgrock",Url_imgrock},
             //pixsense
             {"pixsense",Url_pixsense},
             //imgseed 有驗證碼 無法破解
@@ -147,7 +145,10 @@ namespace NyaaRSSreader
             {"imgstudio",Url_UploadBig},
             {"damimage",Url_UploadBig},
             //imgtrex專用
-            {"imgtrex",Url_imgtrex}
+            {"imgtrex",Url_imgtrex},
+            //擋continue to image
+            {"imgview",Url_continue},
+            {"imgrock",Url_continue},
         };
         #endregion
 
@@ -391,14 +392,15 @@ namespace NyaaRSSreader
         }
         #endregion
 
-        #region imgrock專用
-        //imgrock專用
-        private static string Url_imgrock(string url) {
+        #region  有擋Continue to Image的網站
+        // 有擋Continue to Image的網站
+        private static string Url_continue(string url)
+        {
             string BigImageUrl = string.Empty;
             try
             {
                 Regex matchUrl = new Regex(
-                @"^http://\w*.?imgrock.net/(?<file_code>\w+)/[\w\d\W]+.jpe?g.html$"
+                @"^http://\w*.?(?:imgrock|imgview).net/(?<file_code>\w+)/[\w\d\W]+.jpe?g.html$"
                 , RegexOptions.Multiline);
                 Match matchUrlGroup = matchUrl.Match(url);
 
@@ -419,7 +421,7 @@ namespace NyaaRSSreader
                     //=============step2 取得html裡 .php結尾的連結 需要附加file_code的cookie
                     //才會回傳必須的hidden value
                     Regex matchRealUrl = new Regex(
-                   @"(?<link>http://imgrock.net/\w+.php)"
+                   @"(?<link>http://(imgrock|imgview).net/\w+.php)"
                    , RegexOptions.Multiline);
                     string RealLink = matchRealUrl.Match(html).Groups["link"].Value;
                     var clientRealLink = new RestClient(RealLink);
@@ -454,7 +456,7 @@ namespace NyaaRSSreader
                     string html4 = responseBigImage.Content;
 
                     Regex ptAllUrl = new Regex(
-                    @"(?<url>http://\w+.imgrock.net/img/(?:[\w-]+/?)+.jpe?g)"
+                    @"(?<url>http://\w+.(imgrock|imgview).net/img/(?:[\w-]+/?)+.jpe?g)"
                     , RegexOptions.Multiline);
                     BigImageUrl = ptAllUrl.Match(html4).Groups["url"].Value;
 

@@ -88,15 +88,15 @@ namespace UnitTest
         }
 
         [TestMethod]
-        //判斷imgrock能不能傳回大圖
-        public void TestImgrock()
+        //有擋Continue to Image的網站   imgrock  imgview
+        public void TestImgContinue()
         {
             //輸入小圖的網址 
-            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgrock.net/sgy68jca9je4/a66.jpg.html");
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgrock.net/sgy68jca9je4/a66.jpg.html  http://imgview.net/wxwqjfjwt6dg/JUFD-637-1.jpg.html");
             Assert.IsTrue(urlList.Count > 0);
             foreach (var url in urlList)
             {
-                Assert.IsTrue(Regex.IsMatch(url, @"http://[\d\w]+.imgrock.net/img/\w+/[\w-]+.jpe?g", RegexOptions.Singleline));
+                Assert.IsTrue(Regex.IsMatch(url, @"http://[\d\w]+.(imgrock|imgview).net/img/\w+/[\w-]+.jpe?g", RegexOptions.Singleline));
             }
         }
 
