@@ -127,15 +127,15 @@ namespace UnitTest
         }
 
         [TestMethod]
-        //判斷imgcandy能不能傳回大圖
+        //判斷imgcandy和img.yt能不能傳回大圖
         public void TestImgCandy()
         {
             //輸入小圖的網址 
-            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgcandy.net/img-58102e705444f_VENU-631.jpg.html ");
+            var urlList = new GetPreViewImage().GetBigImageUrl("https://img.yt/img-581185e90616e.html  http://imgcandy.net/img-58102e705444f_VENU-631.jpg.html ");
             Assert.IsTrue(urlList.Count > 0);
             foreach (var url in urlList)
             {
-                Assert.IsTrue(Regex.IsMatch(url, @"http://imgcandy.net/[\w-_]+.jpe?g.html", RegexOptions.Singleline));
+                Assert.IsTrue(Regex.IsMatch(url, @"http://(imgcandy|img).(net|yt)/upload/big/[\w-/_#&]+.jpe?g", RegexOptions.Singleline));
             }
         }
 

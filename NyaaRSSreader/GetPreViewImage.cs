@@ -111,7 +111,6 @@ namespace NyaaRSSreader
             { "imgdream", Url_deleteThumb },
             //small改big
             {"imgblank",Url_changeSmallToBig},
-            {"img.yt",Url_changeSmallToBig},
             {"dimtus",Url_changeSmallToBig},
             {"imgseed",Url_changeSmallToBig},
             {"55888",Url_changeSmallToBig},
@@ -146,11 +145,12 @@ namespace NyaaRSSreader
             {"damimage",Url_UploadBig},
             //imgtrex專用
             {"imgtrex",Url_imgtrex},
-            //擋continue to image
+            //擋continue to image 和input hidden value
             {"imgview",Url_continue},
             {"imgrock",Url_continue},
-            //imgcandy專用
-            {"imgcandy",Url_imgcandy}
+            //擋continue to image
+            {"imgcandy",Url_OneContinue},
+            {"img.yt",Url_OneContinue}
         };
         #endregion
 
@@ -236,15 +236,15 @@ namespace NyaaRSSreader
         }
         #endregion
 
-        #region imageCandy專用
+        #region 有擋Continue to Image的網站 imgcandy 、
         //imageCandy專用
-        private static string Url_imgcandy(string url)
+        private static string Url_OneContinue(string url)
         {
             string BigImageUrl = string.Empty;
             //需要同意瀏覽18禁連結的cookie 無解
 
             //如果是連結網址就進行request 縮圖網址就忽略
-            if (Regex.IsMatch(url, @"^http://imgcandy.net/[\w/_-]+.jpe?g.html$"))
+            if (Regex.IsMatch(url, @"^https?://(imgcandy|img).(net|yt)/[\w/_-]+(.jpe?g)?.html$"))
             {
                 var client = new RestClient(url);
                 //這是Post
@@ -256,9 +256,12 @@ namespace NyaaRSSreader
                 string html = response.Content;
 
                 Regex ptAllUrl = new Regex(
-                @"(?<url>http://imgcandy.net/upload/big/[\w-/_#&]+.jpe?g)"
+                @"(?<url>https?://(imgcandy|img).(net|yt)/upload/big/[\w-/_#&]+.jpe?g)"
                 , RegexOptions.Multiline);
                 BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
+            }
+            else {
+                BigImageUrl = Url_changeSmallToBig(url);
             }
 
             return BigImageUrl;
@@ -424,7 +427,7 @@ namespace NyaaRSSreader
         }
         #endregion
 
-        #region  有擋Continue to Image的網站
+        #region  有擋Continue to Image的網站(先轉頁到.php 再取hiden value :pre、op、id 再取到大圖)
         // 有擋Continue to Image的網站
         private static string Url_continue(string url)
         {
