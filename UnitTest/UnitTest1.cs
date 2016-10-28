@@ -126,6 +126,20 @@ namespace UnitTest
             }
         }
 
+        [TestMethod]
+        //判斷imgcandy能不能傳回大圖
+        public void TestImgCandy()
+        {
+            //輸入小圖的網址 
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgcandy.net/img-58102e705444f_VENU-631.jpg.html ");
+            Assert.IsTrue(urlList.Count > 0);
+            foreach (var url in urlList)
+            {
+                Assert.IsTrue(Regex.IsMatch(url, @"http://imgcandy.net/[\w-_]+.jpe?g.html", RegexOptions.Singleline));
+            }
+        }
+
+
 
         [TestMethod]
         //大圖網址像 upload/big/2016/10/25/580f7084e76dc.jpg 的網站專用

@@ -149,6 +149,8 @@ namespace NyaaRSSreader
             //擋continue to image
             {"imgview",Url_continue},
             {"imgrock",Url_continue},
+            //imgcandy專用
+            {"imgcandy",Url_imgcandy}
         };
         #endregion
 
@@ -233,6 +235,36 @@ namespace NyaaRSSreader
             return BigImageUrl;
         }
         #endregion
+
+        #region imageCandy專用
+        //imageCandy專用
+        private static string Url_imgcandy(string url)
+        {
+            string BigImageUrl = string.Empty;
+            //需要同意瀏覽18禁連結的cookie 無解
+
+            //如果是連結網址就進行request 縮圖網址就忽略
+            if (Regex.IsMatch(url, @"^http://imgcandy.net/[\w/_-]+.jpe?g.html$"))
+            {
+                var client = new RestClient(url);
+                //這是Post
+                var request = new RestRequest("", Method.POST);
+                request.AddHeader("content-type", "application/x-www-form-urlencoded");
+                request.AddParameter("imgContinue", "Continue to your image");
+                IRestResponse response = client.Execute(request);
+                //這是回傳的html
+                string html = response.Content;
+
+                Regex ptAllUrl = new Regex(
+                @"(?<url>http://imgcandy.net/upload/big/[\w-/_#&]+.jpe?g)"
+                , RegexOptions.Multiline);
+                BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
+            }
+
+            return BigImageUrl;
+        }
+        #endregion
+
 
         #region pixsense專用
         //pixsense專用
