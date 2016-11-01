@@ -497,6 +497,7 @@ namespace NyaaRSSreader
             PageButtonClickEvent("Next");
         }
 
+        //頁數按鈕點擊事件 如果是JumpPage也呼叫此事件
         public void PageButtonClickEvent(string type,int jumpPage=0) 
         {
             string offset=string.Empty;
@@ -546,9 +547,8 @@ namespace NyaaRSSreader
         //刷新按鈕
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            //清空dataGridView的資料
-            this.dataGridView1.Rows.Clear();
-            XmlStringToDataTable(BuildRssUrl());
+            //跳到第一頁
+            PageButtonClickEvent("Jump", 1);
         }
         #endregion
         #region 判斷上一頁、下一頁按鈕可否使用  | textBox只可輸入數字

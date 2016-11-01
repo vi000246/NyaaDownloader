@@ -152,7 +152,8 @@ namespace NyaaRSSreader
             //擋continue to image
             {"imgcandy",Url_OneContinue},
             {"img.yt",Url_OneContinue},
-            {"idlelive",Url_OneContinue}
+            {"idlelive",Url_OneContinue},
+            {"imgbb",Url_OneContinue}
         };
         #endregion
 
@@ -238,7 +239,7 @@ namespace NyaaRSSreader
         }
         #endregion
 
-        #region 有擋Continue to Image的網站 imgcandy 、img.yt、idlelive
+        #region 有擋Continue to Image的網站 imgcandy 、img.yt、idlelive、imgbb
         private static string Url_OneContinue(string url)
         {
             string BigImageUrl = string.Empty;
@@ -260,21 +261,39 @@ namespace NyaaRSSreader
             }
 
             //如果是連結網址就進行request 縮圖網址就忽略
-            if (Regex.IsMatch(url, @"^https?://(imgcandy|img|thumbnailus).(net|yt|com)/[\w/_-]+(.jpe?g)?.html$"))
+            if (Regex.IsMatch(url, @"https?://(imgcandy|img|thumbnailus|imgbb).(net|yt|com)/[\w/_-]+(.jpe?g)?(.html)?"))
             {
                 var client = new RestClient(url);
                 //這是Post
                 var request = new RestRequest("", Method.POST);
                 request.AddHeader("content-type", "application/x-www-form-urlencoded");
-                //如果是thumbnailus 它要附加的字串跟其他家網站不一樣
-                string bodyParameter = url.Contains("thumbnailus") ? "Continue to View Screen image ... " : "Continue to your image";
+               
+                //每家網站要附加的cookie字串都不一樣 用switch case選擇
+                string[] keys = new string[] { "thumbnailus", "imgcandy","img.yt","imgbb" };
+
+                string sKeyResult = keys.FirstOrDefault<string>(s => url.Contains(s));
+                string bodyParameter = string.Empty;
+                switch (sKeyResult)
+                {
+                    case "thumbnailus":
+                        bodyParameter =  "Continue to View Screen image ... ";
+                        break;
+                    case "imgcandy":
+                    case "img.yt":
+                        bodyParameter = "Continue to your image";
+                        break;
+                    case "imgbb":
+                        bodyParameter = "Continue to image ...";
+                        break;
+                }
+
                 request.AddParameter("imgContinue", bodyParameter);
                 IRestResponse response = client.Execute(request);
                 //這是回傳的html
                 string html = response.Content;
 
                 Regex ptAllUrl = new Regex(
-                @"(?<url>https?://(imgcandy|img|thumbnailus).(net|yt|com)/upload/big/[\w-/_#&]+.jpe?g)"
+                @"(?<url>https?://(imgcandy|img|thumbnailus|imgbb).(net|yt|com)/upload/big/[\w-/_#&]+.jpe?g)"
                 , RegexOptions.Multiline);
                 BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
             }
