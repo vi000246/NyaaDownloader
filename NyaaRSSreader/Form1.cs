@@ -266,8 +266,6 @@ namespace NyaaRSSreader
                 //如果有解析到圖片
                 if (imageFileList.Count > 0)
                 {
-                    if (FormSetting.IsEnablePopup)
-                    {
                             Form form =new Form();
                             form.StartPosition = FormStartPosition.CenterScreen;
                             //popup視窗標題
@@ -335,11 +333,13 @@ namespace NyaaRSSreader
                             //表單透明度 記得拿掉
                             form.Opacity = FormSetting.FormOpaticy;
                
-                            //form.Show();
-                            //讓視窗出現時不要取得focus
-                            FormControl.ShowInactiveTopmost(form);
-                            
-                    }//end of FormSetting.IsEnablePopup
+                            //根據設定要不要顯示彈出視窗 debug用
+                            if (FormSetting.IsEnablePopup)
+                            {
+                                //form.Show();
+                                //讓視窗出現時不要取得focus
+                                FormControl.ShowInactiveTopmost(form);
+                            }//end of FormSetting.IsEnablePopup
 
                 }
                 else

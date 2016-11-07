@@ -114,15 +114,15 @@ namespace UnitTest
         }
 
         [TestMethod]
-        //判斷imgtrex能不能傳回大圖
-        public void TestImgtrex()
+        //判斷imgtrex和imagetwist能不能傳回大圖
+        public void TestImgtrexAndimagetwist()
         {
             //輸入小圖的網址 
-            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgtrex.com/xk2lsfht6j92/AVOP-214.jpg");
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://imgtrex.com/xk2lsfht6j92/AVOP-214.jpg  http://imagetwist.com/po3r49tmoyz1/87247336f2129a70ee23945d9f94407d.jpg");
             Assert.IsTrue(urlList.Count > 0);
             foreach (var url in urlList)
             {
-                Assert.IsTrue(Regex.IsMatch(url, @"http://\w+.imgtrex.com/i/[\w/]+.jpe?g", RegexOptions.Singleline));
+                Assert.IsTrue(Regex.IsMatch(url, @"http://\w+.(imgtrex|imagetwist).com/i/[\w/]+.jpe?g", RegexOptions.Singleline));
             }
         }
 

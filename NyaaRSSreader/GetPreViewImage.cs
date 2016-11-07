@@ -144,7 +144,8 @@ namespace NyaaRSSreader
             {"imgstudio",Url_UploadBig},
             {"damimage",Url_UploadBig},
             //imgtrex專用
-            {"imgtrex",Url_imgtrex},
+            {"imgtrex",Url_imgtrexAndimagetwist},
+            {"imagetwist",Url_imgtrexAndimagetwist},
             //擋continue to image 和input hidden value
             {"imgview",Url_continue},
             {"imgrock",Url_continue},
@@ -368,14 +369,14 @@ namespace NyaaRSSreader
         }
         #endregion
 
-        #region imgtrex專用
+        #region imgtrex和imagetwist專用
         //imgtrex專用
-        private static string Url_imgtrex(string url)
+        private static string Url_imgtrexAndimagetwist(string url)
         {
             string BigImageUrl = string.Empty;
 
             //如果是連結網址就進行request 縮圖網址就忽略
-            if (Regex.IsMatch(url, @"^http://imgtrex.com/[\w/-]+.jpe?g$"))
+            if (Regex.IsMatch(url, @"^http://(imgtrex|imagetwist).com/[\w/-]+.jpe?g$"))
             {
                 var client = new RestClient(url);
                 var request = new RestRequest("", Method.GET);
@@ -385,7 +386,7 @@ namespace NyaaRSSreader
                 string html = response.Content;
 
                 Regex ptAllUrl = new Regex(
-                @"(?<url>http://\w+.imgtrex.com/i/[\w/]+.jpe?g)"
+                @"(?<url>http://\w+.(imgtrex|imagetwist).com/i/[\w/]+.jpe?g)"
                 , RegexOptions.Multiline);
                 BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
 
