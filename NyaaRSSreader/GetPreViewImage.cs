@@ -143,9 +143,11 @@ namespace NyaaRSSreader
             {"imageteam",Url_UploadBig},
             {"imgstudio",Url_UploadBig},
             {"damimage",Url_UploadBig},
-            //imgtrex專用
-            {"imgtrex",Url_imgtrexAndimagetwist},
-            {"imagetwist",Url_imgtrexAndimagetwist},
+            //imgtrex imagetwist專用 只需要get一次就能取到大圖
+            {"imgtrex",Url_OneGetRequest},
+            {"imagetwist",Url_OneGetRequest},
+            //javtotal專用
+            {"javtotal",Url_javtotal},
             //擋continue to image 和input hidden value
             {"imgview",Url_continue},
             {"imgrock",Url_continue},
@@ -370,8 +372,8 @@ namespace NyaaRSSreader
         #endregion
 
         #region imgtrex和imagetwist專用
-        //imgtrex專用
-        private static string Url_imgtrexAndimagetwist(string url)
+        //imgtrex imagetwist專用
+        private static string Url_OneGetRequest(string url)
         {
             string BigImageUrl = string.Empty;
 
@@ -391,6 +393,38 @@ namespace NyaaRSSreader
                 BigImageUrl = ptAllUrl.Match(html).Groups["url"].Value;
 
 
+            }
+            //如果傳來的是小圖的網址 
+            else if (Regex.IsMatch(url, @".*jpe?g"))
+            {
+                BigImageUrl = Url_changeSmallToBig(url);
+            }
+
+            return BigImageUrl;
+        }
+        #endregion
+
+        #region imagetotal專用
+        //imagetotal專用
+        private static string Url_javtotal(string url)
+        {
+            string BigImageUrl = string.Empty;
+
+            //如果是連結網址就進行request 縮圖網址就忽略
+            if (Regex.IsMatch(url, @"^http://cdn.javtotal.com/img/[\w/-]+$"))
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest("", Method.GET);
+                request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
+                IRestResponse response = client.Execute(request);
+                //這是回傳的html
+                string html = response.Content;
+
+                //因為這網站回傳的html沒有host地址 所以要自已加上去
+                Regex ptAllUrl = new Regex(
+                @"src=""(?<url>images/\w+.jpe?g)"""
+                , RegexOptions.Multiline);
+                BigImageUrl = "http://cdn.javtotal.com/"+ptAllUrl.Match(html).Groups["url"].Value;
             }
             //如果傳來的是小圖的網址 
             else if (Regex.IsMatch(url, @".*jpe?g"))

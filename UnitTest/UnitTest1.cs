@@ -127,6 +127,19 @@ namespace UnitTest
         }
 
         [TestMethod]
+        //判斷Javtotal能不能傳回大圖
+        public void TestJavtotal()
+        {
+            //輸入小圖的網址 
+            var urlList = new GetPreViewImage().GetBigImageUrl("http://cdn.javtotal.com/img/06504335015718765865");
+            Assert.IsTrue(urlList.Count > 0);
+            foreach (var url in urlList)
+            {
+                Assert.IsTrue(Regex.IsMatch(url, @"http://cdn.javtotal.com/images/\w+.jpe?g", RegexOptions.Singleline));
+            }
+        }
+
+        [TestMethod]
         //判斷imgcandy和img.yt和idlelive和imgbb能不能傳回大圖
         public void TestImgCandy()
         {
