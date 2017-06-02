@@ -32,8 +32,8 @@ namespace NyaaRSSreader
 
                 //只取出html裡描述的部份 其他去掉
                 Regex pattern = new Regex(
-                @"<div\sclass=""viewdescription"">(?<content>.*)<h3>Files\sin\storrent\:</h3>"
-                , RegexOptions.Multiline);
+                @"<div\sclass=""panel-body""\sid=""torrent-description"">(?<content>.*)<div\sclass=""panel\spanel-default"">"
+                , RegexOptions.Singleline);
                 Match content = pattern.Match(html);
                 html = content.Groups["content"].Value;
 
