@@ -5,3 +5,12 @@ C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\UnitT
 C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\UnitTest\obj\Debug\UnitTest.csprojResolveAssemblyReference.cache
 C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\UnitTest\obj\Debug\UnitTest.dll
 C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\UnitTest\obj\Debug\UnitTest.pdb
+D:\Project\NyaaDownloader\UnitTest\bin\Debug\UnitTest.dll
+D:\Project\NyaaDownloader\UnitTest\bin\Debug\UnitTest.pdb
+D:\Project\NyaaDownloader\UnitTest\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+D:\Project\NyaaDownloader\UnitTest\bin\Debug\NyaaRSSreader.exe
+D:\Project\NyaaDownloader\UnitTest\bin\Debug\NyaaRSSreader.pdb
+D:\Project\NyaaDownloader\UnitTest\bin\Debug\zh-Hant\Microsoft.VisualStudio.QualityTools.UnitTestFramework.resources.dll
+D:\Project\NyaaDownloader\UnitTest\obj\Debug\UnitTest.csprojResolveAssemblyReference.cache
+D:\Project\NyaaDownloader\UnitTest\obj\Debug\UnitTest.dll
+D:\Project\NyaaDownloader\UnitTest\obj\Debug\UnitTest.pdb

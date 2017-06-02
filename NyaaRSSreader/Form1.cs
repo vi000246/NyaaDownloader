@@ -81,6 +81,7 @@ namespace NyaaRSSreader
             {
                 //新建XML文件類別
                 XDocument myXDoc = XDocument.Load(url);
+                XNamespace n = @"https://sukebei.nyaa.si/xmlns/nyaa";
                 var rootNode = myXDoc.Root.Element("channel").Descendants("item");
                 //取得每個文章的資料
                 foreach (var item in rootNode)
@@ -88,6 +89,10 @@ namespace NyaaRSSreader
                     string title = item.Element("title").Value;  // 標題
                     string link = item.Element("link").Value;    // 下載連結
                     string guid = item.Element("guid").Value;    // 文章連結
+                    string Seeder = item.Element(n+ "seeders").Value;//完整檔案提供者
+                    string Leecher = item.Element(n + "leechers").Value;//不完整檔案的下載者
+                    string Size = item.Element(n + "size").Value;//檔案大小
+                    string Downloads = item.Element(n + "downloads").Value;//下載數量
                     DateTime myDate;
                     string pubDate = string.Empty;
                     if (DateTime.TryParse(item.Element("pubDate").Value, out myDate))
@@ -95,18 +100,10 @@ namespace NyaaRSSreader
                         pubDate = myDate.ToString("yyyy/MM/dd HH:mm");
                     }
 
-                    string description = item.Element("description").Value;
-                    //過濾出需要的資訊
-                    Regex pattern1 = new Regex(
-    @"(?<seeder>\d+)\s+seeder\(s\),\s+(?<leecher>\d+)\s+leecher\(s\),\s+(?<download>\d+)\s+download\(s\)\s-\s+(?<size>[\d.]+\s+\w+)");
-                    Match match = pattern1.Match(description);
 
-                    string Download = match.Groups["download"].Value;
-                    string Size = match.Groups["size"].Value;
-                    string Leecher = match.Groups["leecher"].Value;
-                    string Seeder = match.Groups["seeder"].Value;
                     //將資料綁定到dataGridView (標題、日期、serder、leecher、文章連結(hide)、下載連結(hide)、檔案大小、下載數量)
-                    this.dataGridView1.Rows.Add(title, pubDate, Seeder, Leecher, guid, link,Size,Download);
+                    // p.s.新版的RSS已經沒有下載數量了 所以設0
+                    this.dataGridView1.Rows.Add(title, pubDate, Seeder, Leecher, guid, link,Size, Downloads);
                     //顯示目前頁數
                     textPage.Text = OffsetIndex.ToString();
                     //依照下拉選單的值 排序DataGridView
@@ -504,12 +501,12 @@ namespace NyaaRSSreader
             string url = BuildRssUrl();
             //判斷要增加頁數還是減頁數還是跳頁
             if(type=="Prev")
-                 offset = "&offset=" + --OffsetIndex;
+                 offset = "&p=" + --OffsetIndex;
             else if (type == "Next")
-                offset = "&offset=" + ++OffsetIndex;
+                offset = "&p=" + ++OffsetIndex;
             else if (type == "Jump")
             {
-                offset = "&offset=" + jumpPage;
+                offset = "&p=" + jumpPage;
                 OffsetIndex = jumpPage;
             }
             ButtonEnable();
@@ -622,9 +619,34 @@ namespace NyaaRSSreader
             //標題搜尋
             if (!string.IsNullOrEmpty(textKeyWord.Text))
                 url += "&term=" + textKeyWord.Text;
-            //排序搜尋
+            //排序搜尋(全部資料 非單頁)
             if (cbRssSort.SelectedIndex != -1)
-                url += "&sort="+(cbRssSort.SelectedIndex+1);
+            {
+                switch (cbRssSort.SelectedIndex)
+                {
+                    case 0://日期
+                        url += "&s=id&o=desc";
+                        break;
+                    case 1://Seeders
+                        url += "&s=seeders&o=desc";
+                        break;
+                    case 2://Leechers
+                        url += "&s=leechers&o=desc";
+                        break;
+                    case 3://下載數
+                        url += "&s=downloads&o=desc";
+                        break;
+                    case 4://檔案大小
+                        url += "&s=size&o=desc";
+                        break;
+                    case 5://評論數
+                        url += "&s=comments&o=desc";
+                        break;
+                    default:
+                        break;
+                }
+               
+            }
             //日期B搜尋
             if (!string.IsNullOrEmpty(textDate_B.Text))
                 url += "&minage=" + textDate_B.Text;

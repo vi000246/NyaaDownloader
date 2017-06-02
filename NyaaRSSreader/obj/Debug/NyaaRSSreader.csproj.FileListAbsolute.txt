@@ -4,3 +4,10 @@ C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\NyaaR
 C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\NyaaRSSreader\obj\Debug\NyaaRSSreader.csproj.GenerateResource.Cache
 C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\NyaaRSSreader\obj\Debug\NyaaRSSreader.exe
 C:\Users\Administrator\documents\visual studio 2013\Projects\NyaaRSSreader\NyaaRSSreader\obj\Debug\NyaaRSSreader.pdb
+D:\Project\NyaaDownloader\NyaaRSSreader\bin\Debug\NyaaRSSreader.exe.config
+D:\Project\NyaaDownloader\NyaaRSSreader\obj\Debug\NyaaRSSreader.Nyaa抓檔神器.resources
+D:\Project\NyaaDownloader\NyaaRSSreader\obj\Debug\NyaaRSSreader.Properties.Resources.resources
+D:\Project\NyaaDownloader\NyaaRSSreader\obj\Debug\NyaaRSSreader.csproj.GenerateResource.Cache
+D:\Project\NyaaDownloader\NyaaRSSreader\obj\Debug\NyaaRSSreader.exe
+D:\Project\NyaaDownloader\NyaaRSSreader\obj\Debug\NyaaRSSreader.pdb
+D:\Project\NyaaDownloader\NyaaRSSreader\obj\Debug\NyaaRSSreader.csprojResolveAssemblyReference.cache

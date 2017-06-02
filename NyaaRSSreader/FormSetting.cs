@@ -17,9 +17,9 @@ namespace NyaaRSSreader
         //下拉選單的值 RSS分類
         public static Dictionary<string, string>CatalogueDropDownList = new Dictionary<string, string>()
             {
-            {"https://www.nyaa.se/?page=rss&cats=1_0","Anime"},
-            {"https://www.nyaa.se/?page=rss&cats=3_0","Audio"},
-            {"https://sukebei.nyaa.se/?page=rss&cats=8_0","R18-RealLife"},
+            {"https://sukebei.nyaa.si/?page=rss&c=1_1&f=0","Anime"},
+            {"https://sukebei.nyaa.si/?page=rss&c=2_2&f=0","RealLife Videos"},
+            {"https://sukebei.nyaa.si/?page=rss&c=2_0&f=0","RealLife"},
             
             };
 

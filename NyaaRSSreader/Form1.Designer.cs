@@ -364,9 +364,7 @@
             "Leechers",
             "下載數",
             "檔案大小",
-            "名稱",
-            "升序",
-            "降序"});
+            "評論數"});
             this.cbRssSort.Location = new System.Drawing.Point(298, 28);
             this.cbRssSort.Name = "cbRssSort";
             this.cbRssSort.Size = new System.Drawing.Size(121, 20);
